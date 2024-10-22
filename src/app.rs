@@ -148,10 +148,4 @@ impl App {
             self.user_input.clear();
         }
     }
-
-    fn next_word(&mut self) {
-        self.word_queue.next_word();
-        self.start_time = None;
-        self.backspace_used = false;
-    }
 }

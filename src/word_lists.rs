@@ -1,5 +1,4 @@
-use std::fs::File;
-use std::io::{self, BufRead, BufReader};
+use std::io;
 
 use flate2::read::GzDecoder;
 
@@ -51,14 +50,4 @@ fn decompress_gzip(compressed_data: &[u8]) -> String {
     let mut decoded_bytes = Vec::new();
     io::copy(&mut decoder, &mut decoded_bytes).expect("Failed to decompress");
     String::from_utf8(decoded_bytes).expect("Decoded bytes are not valid UTF-8")
-}
-
-fn load_words_from_file(filename: &str) -> Vec<String> {
-    let file = File::open(filename).expect("Unable to open file");
-    let decoder = GzDecoder::new(file);
-    let reader = BufReader::new(decoder);
-    reader
-        .lines()
-        .map(|l| l.expect("Unable to read line"))
-        .collect()
 }
