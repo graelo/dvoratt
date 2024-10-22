@@ -73,14 +73,22 @@ impl App {
             self.performance
                 .update_fastest_slowest_words(&user_input_clone, speed);
             self.update_stats();
-            if self.backspace_used {
+
+            if self.word_queue.is_current_word_problem() {
+                self.word_queue.update_problem_word_correct_attempt();
+                if self.word_queue.get_current_problem_word_repetitions() >= 3 {
+                    self.performance
+                        .update_problem_word_correct_attempts(self.word_queue.current_word());
+                }
+            } else if self.backspace_used {
                 self.add_problem_word();
             } else {
                 self.performance
                     .update_problem_word_correct_attempts(self.word_queue.current_word());
             }
+
             self.performance.remove_learned_words();
-            self.next_word();
+            self.word_queue.next_word();
         } else {
             self.add_problem_word();
         }

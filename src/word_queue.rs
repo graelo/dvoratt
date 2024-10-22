@@ -7,8 +7,18 @@ pub struct WordQueue {
     all_words: Vec<String>,
     current_word: String,
     next_words: Vec<String>,
+    is_repeating_problem_word: bool,
+    problem_word_repetitions: u8,
 }
 impl WordQueue {
+    pub fn is_current_word_problem(&self) -> bool {
+        self.is_repeating_problem_word
+    }
+
+    pub fn get_current_problem_word_repetitions(&self) -> u8 {
+        self.problem_word_repetitions
+    }
+
     pub fn new(initial_words: Vec<String>) -> Self {
         let mut all_words = initial_words;
         all_words.shuffle(&mut thread_rng());
@@ -23,22 +33,32 @@ impl WordQueue {
             all_words,
             current_word,
             next_words,
+            is_repeating_problem_word: false,
+            problem_word_repetitions: 0,
         }
     }
 
     pub fn next_word(&mut self) {
+        if self.is_repeating_problem_word {
+            if self.problem_word_repetitions >= 3 {
+                self.is_repeating_problem_word = false;
+                self.problem_word_repetitions = 0;
+                self.problem_word_queue.pop_front();
+            } else {
+                return;
+            }
+        }
+
         if self.next_words.is_empty() {
             self.next_words = self
                 .all_words
                 .split_off(self.all_words.len().saturating_sub(2));
         }
 
-        if let Some((problem_word, attempts)) = self.problem_word_queue.pop_front() {
+        if let Some((problem_word, _)) = self.problem_word_queue.front() {
             self.current_word = problem_word.clone();
-            if attempts < 2 {
-                self.problem_word_queue
-                    .push_back((problem_word, attempts + 1));
-            }
+            self.is_repeating_problem_word = true;
+            self.problem_word_repetitions = 0;
         } else {
             self.current_word = self.next_words.remove(0);
         }
@@ -57,6 +77,14 @@ impl WordQueue {
             self.problem_word_queue[index].1 = 0;
         } else {
             self.problem_word_queue.push_back((word, 0));
+        }
+        self.is_repeating_problem_word = true;
+        self.problem_word_repetitions = 0;
+    }
+
+    pub fn update_problem_word_correct_attempt(&mut self) {
+        if self.is_repeating_problem_word {
+            self.problem_word_repetitions += 1;
         }
     }
 

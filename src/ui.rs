@@ -48,16 +48,37 @@ fn draw_typing_area(f: &mut Frame, app: &App, current_chunk: Rect, input_chunk: 
         .constraints([Constraint::Percentage(80), Constraint::Percentage(20)])
         .split(current_chunk);
 
-    let current_word = app.word_queue.current_word();
-    let next_word = app
-        .word_queue
-        .next_words()
-        .first()
-        .cloned()
-        .unwrap_or_default();
+    let current_word = app.word_queue.current_word().to_string();
+    let next_word = if app.word_queue.is_current_word_problem() {
+        String::new()
+    } else {
+        app.word_queue
+            .next_words()
+            .first()
+            .cloned()
+            .unwrap_or_default()
+    };
+
+    let repetition_count = if app.word_queue.is_current_word_problem() {
+        format!(
+            " ({})",
+            app.word_queue.get_current_problem_word_repetitions() + 1
+        )
+    } else {
+        String::new()
+    };
 
     let words_to_type = vec![
-        Span::styled(current_word, Style::default().fg(Color::Yellow)),
+        if app.word_queue.is_current_word_problem() {
+            Span::styled(
+                format!("{}{}", current_word, repetition_count),
+                Style::default()
+                    .fg(Color::Yellow)
+                    .add_modifier(Modifier::UNDERLINED),
+            )
+        } else {
+            Span::styled(current_word, Style::default().fg(Color::Yellow))
+        },
         Span::raw(" "),
         Span::styled(next_word, Style::default().add_modifier(Modifier::DIM)),
     ];
