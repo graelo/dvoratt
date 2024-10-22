@@ -124,12 +124,12 @@ impl App {
         }
     }
 
-    pub fn average_wpm(&self) -> f32 {
-        self.performance.average_wpm()
-    }
-
     pub fn average_speed_last_10_words(&self) -> f32 {
         self.performance.average_speed_last_10_words()
+    }
+
+    pub fn generate_final_scores(&self) -> String {
+        self.performance.generate_final_scores()
     }
 
     pub fn on_tick(&mut self) {

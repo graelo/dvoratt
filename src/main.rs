@@ -39,10 +39,7 @@ fn main() -> Result<(), Box<dyn Error>> {
 
     if let Ok(quit) = res {
         if quit {
-            println!(
-                "Thanks for practicing! Your final WPM: {:.2}",
-                app.average_wpm()
-            );
+            println!("{}", app.generate_final_scores());
         }
     } else if let Err(err) = res {
         println!("{:?}", err);

@@ -74,4 +74,38 @@ impl PerformanceTracker {
     pub fn get_struggle_combinations(&self) -> &[(String, f32)] {
         self.struggle_combinations.get_combinations()
     }
+
+    pub fn generate_final_scores(&self) -> String {
+        let json = serde_json::json!({
+            "average_speed": self.average_wpm(),
+            "problem_words": self.get_problem_words().iter().map(|(word, speed, backspaces, correct_attempts)| {
+                serde_json::json!({
+                    "word": word,
+                    "speed": speed,
+                    "backspaces": backspaces,
+                    "correct_attempts": correct_attempts
+                })
+            }).collect::<Vec<_>>(),
+            "fastest_words": self.get_fastest_words().iter().map(|(word, speed)| {
+                serde_json::json!({
+                    "word": word,
+                    "speed": speed
+                })
+            }).collect::<Vec<_>>(),
+            "slowest_words": self.get_slowest_words().iter().map(|(word, speed)| {
+                serde_json::json!({
+                    "word": word,
+                    "speed": speed
+                })
+            }).collect::<Vec<_>>(),
+            "struggle_combinations": self.get_struggle_combinations().iter().map(|(combo, speed)| {
+                serde_json::json!({
+                    "combination": combo,
+                    "speed": speed
+                })
+            }).collect::<Vec<_>>()
+        });
+
+        serde_json::to_string_pretty(&json).unwrap_or_else(|_| "{}".to_string())
+    }
 }
