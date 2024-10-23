@@ -42,6 +42,23 @@ fn draw_word_list_tabs(f: &mut Frame, app: &App, area: Rect) {
 
     f.render_widget(tabs, area);
 }
+
+fn generate_styled_input<'a>(input: &'a str, mistyped_chars: &'a [usize]) -> Vec<Span<'a>> {
+    input
+        .char_indices()
+        .map(|(i, c)| {
+            if mistyped_chars.contains(&i) {
+                Span::styled(
+                    c.to_string(),
+                    Style::default().fg(Color::Red).add_modifier(Modifier::BOLD),
+                )
+            } else {
+                Span::raw(c.to_string())
+            }
+        })
+        .collect()
+}
+
 fn draw_typing_area(f: &mut Frame, app: &App, current_chunk: Rect, input_chunk: Rect) {
     let typing_area = Layout::default()
         .direction(Direction::Horizontal)
@@ -99,8 +116,8 @@ fn draw_typing_area(f: &mut Frame, app: &App, current_chunk: Rect, input_chunk: 
                 .title("Avg Speed (Last 10 Words)"),
         );
     f.render_widget(avg_speed_paragraph, typing_area[1]);
-
-    let user_input = Paragraph::new(app.user_input.as_ref() as &str)
+    let styled_input = generate_styled_input(&app.user_input, &app.mistyped_chars);
+    let user_input = Paragraph::new(Line::from(styled_input))
         .style(Style::default().fg(Color::Green))
         .block(Block::default().borders(Borders::ALL).title("Your Input"));
     f.render_widget(user_input, input_chunk);

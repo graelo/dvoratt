@@ -13,6 +13,8 @@ pub struct App {
     pub user_input: String,
     pub start_time: Option<Instant>,
     pub backspace_used: bool,
+
+    pub mistyped_chars: Vec<usize>,
 }
 
 impl App {
@@ -27,6 +29,7 @@ impl App {
             user_input: String::new(),
             start_time: None,
             backspace_used: false,
+            mistyped_chars: Vec::new(),
         }
     }
 
@@ -50,12 +53,25 @@ impl App {
                 if c == ' ' {
                     self.on_word_completed();
                 } else {
+                    let current_word = self.word_queue.current_word();
+                    if self.user_input.len() < current_word.len() {
+                        let expected_char =
+                            current_word.chars().nth(self.user_input.len()).unwrap();
+                        if c != expected_char {
+                            self.mistyped_chars.push(self.user_input.len());
+                        }
+                    }
                     self.user_input.push(c);
                 }
             }
             KeyCode::Backspace => {
                 if !self.user_input.is_empty() {
                     self.user_input.pop();
+                    if let Some(&last) = self.mistyped_chars.last() {
+                        if last == self.user_input.len() {
+                            self.mistyped_chars.pop();
+                        }
+                    }
                     self.backspace_used = true;
                     self.performance.backspace_count += 1;
                     self.add_problem_word();
@@ -93,6 +109,7 @@ impl App {
             self.add_problem_word();
         }
         self.user_input.clear();
+        self.mistyped_chars.clear();
         self.backspace_used = false;
         self.performance.backspace_count = 0;
         self.start_time = None;
