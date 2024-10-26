@@ -12,7 +12,6 @@ pub struct App {
     pub current_list_index: usize,
     pub user_input: String,
     pub start_time: Option<Instant>,
-    pub backspace_used: bool,
 
     pub mistyped_chars: Vec<usize>,
 }
@@ -28,7 +27,6 @@ impl App {
             current_list_index: 1,
             user_input: String::new(),
             start_time: None,
-            backspace_used: false,
             mistyped_chars: Vec::new(),
         }
     }
@@ -72,7 +70,6 @@ impl App {
                             self.mistyped_chars.pop();
                         }
                     }
-                    self.backspace_used = true;
                     self.performance.backspace_count += 1;
                     self.add_problem_word();
                 }
@@ -96,7 +93,7 @@ impl App {
                     self.performance
                         .update_problem_word_correct_attempts(self.word_queue.current_word());
                 }
-            } else if self.backspace_used {
+            } else if self.performance.backspace_used() {
                 self.add_problem_word();
             } else {
                 self.performance
@@ -110,7 +107,6 @@ impl App {
         }
         self.user_input.clear();
         self.mistyped_chars.clear();
-        self.backspace_used = false;
         self.performance.backspace_count = 0;
         self.start_time = None;
     }
@@ -161,7 +157,7 @@ impl App {
             self.word_queue.change_word_list(new_words);
 
             self.start_time = None;
-            self.backspace_used = false;
+            self.performance.backspace_count = 0;
             self.user_input.clear();
         }
     }

@@ -26,6 +26,10 @@ impl PerformanceTracker {
         }
     }
 
+    pub fn backspace_used(&self) -> bool {
+        self.backspace_count > 0
+    }
+
     pub fn update_recent_word_speeds(&mut self, speed: f32) {
         self.word_speed_tracker.update_recent_word_speeds(speed);
     }
