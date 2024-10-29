@@ -7,9 +7,11 @@ pub struct PerformanceTracker {
     pub problem_words: ProblemWords,
     pub struggle_combinations: StruggleCombinations,
     pub last_keypress_time: Option<Instant>,
+    pub word_start_time: Option<Instant>,
     pub total_time: Duration,
     pub total_correct_chars: u32,
     pub backspace_count: u32,
+    pub mistyped_chars: Vec<usize>,
 }
 
 impl PerformanceTracker {
@@ -20,9 +22,11 @@ impl PerformanceTracker {
             problem_words: ProblemWords::new(),
             struggle_combinations: StruggleCombinations::new(),
             last_keypress_time: None,
+            word_start_time: None,
             total_time: Duration::new(0, 0),
             total_correct_chars: 0,
             backspace_count: 0,
+            mistyped_chars: Vec::new(),
         }
     }
 

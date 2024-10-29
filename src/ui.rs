@@ -116,7 +116,7 @@ fn draw_typing_area(f: &mut Frame, app: &App, current_chunk: Rect, input_chunk: 
                 .title("Avg Speed (Last 10 Words)"),
         );
     f.render_widget(avg_speed_paragraph, typing_area[1]);
-    let styled_input = generate_styled_input(&app.user_input, &app.mistyped_chars);
+    let styled_input = generate_styled_input(&app.user_input, &app.performance.mistyped_chars);
     let user_input = Paragraph::new(Line::from(styled_input))
         .style(Style::default().fg(Color::Green))
         .block(Block::default().borders(Borders::ALL).title("Your Input"));

@@ -11,9 +11,6 @@ pub struct App {
     pub word_lists: Vec<WordList>,
     pub current_list_index: usize,
     pub user_input: String,
-    pub start_time: Option<Instant>,
-
-    pub mistyped_chars: Vec<usize>,
 }
 
 impl App {
@@ -26,16 +23,14 @@ impl App {
             word_lists: word_lists.clone(),
             current_list_index: 1,
             user_input: String::new(),
-            start_time: None,
-            mistyped_chars: Vec::new(),
         }
     }
 
     pub fn on_key(&mut self, key: KeyCode) {
         let current_time = Instant::now();
 
-        if self.start_time.is_none() && key != KeyCode::Backspace {
-            self.start_time = Some(current_time);
+        if self.performance.word_start_time.is_none() && key != KeyCode::Backspace {
+            self.performance.word_start_time = Some(current_time);
         }
 
         if let Some(last_time) = self.performance.last_keypress_time {
@@ -56,7 +51,7 @@ impl App {
                         let expected_char =
                             current_word.chars().nth(self.user_input.len()).unwrap();
                         if c != expected_char {
-                            self.mistyped_chars.push(self.user_input.len());
+                            self.performance.mistyped_chars.push(self.user_input.len());
                         }
                     }
                     self.user_input.push(c);
@@ -65,9 +60,9 @@ impl App {
             KeyCode::Backspace => {
                 if !self.user_input.is_empty() {
                     self.user_input.pop();
-                    if let Some(&last) = self.mistyped_chars.last() {
+                    if let Some(&last) = self.performance.mistyped_chars.last() {
                         if last == self.user_input.len() {
-                            self.mistyped_chars.pop();
+                            self.performance.mistyped_chars.pop();
                         }
                     }
                     self.performance.backspace_count += 1;
@@ -106,13 +101,13 @@ impl App {
             self.add_problem_word();
         }
         self.user_input.clear();
-        self.mistyped_chars.clear();
+        self.performance.mistyped_chars.clear();
         self.performance.backspace_count = 0;
-        self.start_time = None;
+        self.performance.word_start_time = None;
     }
 
     fn update_stats(&mut self) {
-        if let Some(start_time) = self.start_time {
+        if let Some(start_time) = self.performance.word_start_time {
             let elapsed = start_time.elapsed();
             self.performance.total_time += elapsed;
             self.performance.total_correct_chars += self.word_queue.current_word().len() as u32;
@@ -128,7 +123,7 @@ impl App {
     }
 
     fn calculate_word_speed(&self) -> f32 {
-        if let Some(start_time) = self.start_time {
+        if let Some(start_time) = self.performance.word_start_time {
             let elapsed = start_time.elapsed();
             let minutes = elapsed.as_secs_f32() / 60.0;
             (self.word_queue.current_word().len() as f32 / 5.0) / minutes
@@ -156,7 +151,7 @@ impl App {
             let new_words = self.word_lists[index].words.clone();
             self.word_queue.change_word_list(new_words);
 
-            self.start_time = None;
+            self.performance.word_start_time = None;
             self.performance.backspace_count = 0;
             self.user_input.clear();
         }
