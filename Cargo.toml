@@ -1,6 +1,6 @@
 # Dvorak Typing Practice CLI App
 [package]
-name = "dvorak"
+name = "dvoratt"
 version = "0.1.0"
 edition = "2021"
 
