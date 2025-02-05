@@ -1,5 +1,5 @@
+use rand::rng;
 use rand::seq::SliceRandom;
-use rand::thread_rng;
 use std::collections::VecDeque;
 
 pub struct WordQueue {
@@ -21,7 +21,7 @@ impl WordQueue {
 
     pub fn new(initial_words: Vec<String>) -> Self {
         let mut all_words = initial_words;
-        all_words.shuffle(&mut thread_rng());
+        all_words.shuffle(&mut rng());
         let current_word = all_words.pop().unwrap_or_default();
         let next_words = vec![
             all_words.pop().unwrap_or_default(),
@@ -65,7 +65,7 @@ impl WordQueue {
 
         while self.next_words.len() < 2 {
             if self.all_words.is_empty() {
-                self.all_words.shuffle(&mut thread_rng());
+                self.all_words.shuffle(&mut rng());
             }
             self.next_words
                 .push(self.all_words.pop().unwrap_or_default());
@@ -98,7 +98,7 @@ impl WordQueue {
 
     pub fn change_word_list(&mut self, new_words: Vec<String>) {
         self.all_words = new_words;
-        self.all_words.shuffle(&mut thread_rng());
+        self.all_words.shuffle(&mut rng());
 
         self.next_words.clear();
         self.next_words = self
