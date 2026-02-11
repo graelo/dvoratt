@@ -1,16 +1,11 @@
 use std::collections::VecDeque;
 
-pub struct WordSpeedTracker {
-    pub recent_word_speeds: VecDeque<f32>,
+#[derive(Default)]
+pub(crate) struct WordSpeedTracker {
+    recent_word_speeds: VecDeque<f32>,
 }
 
 impl WordSpeedTracker {
-    pub fn new() -> Self {
-        WordSpeedTracker {
-            recent_word_speeds: VecDeque::new(),
-        }
-    }
-
     pub fn update_recent_word_speeds(&mut self, speed: f32) {
         self.recent_word_speeds.push_back(speed);
         if self.recent_word_speeds.len() > 10 {
@@ -33,13 +28,13 @@ mod tests {
 
     #[test]
     fn test_new_word_speed_tracker() {
-        let tracker = WordSpeedTracker::new();
+        let tracker = WordSpeedTracker::default();
         assert!(tracker.recent_word_speeds.is_empty());
     }
 
     #[test]
     fn test_update_recent_word_speeds() {
-        let mut tracker = WordSpeedTracker::new();
+        let mut tracker = WordSpeedTracker::default();
         tracker.update_recent_word_speeds(60.0);
         tracker.update_recent_word_speeds(70.0);
         assert_eq!(tracker.recent_word_speeds.len(), 2);
@@ -47,7 +42,7 @@ mod tests {
 
     #[test]
     fn test_average_speed_last_10_words() {
-        let mut tracker = WordSpeedTracker::new();
+        let mut tracker = WordSpeedTracker::default();
         assert_eq!(tracker.average_speed_last_10_words(), 0.0);
 
         tracker.update_recent_word_speeds(60.0);
@@ -57,7 +52,7 @@ mod tests {
 
     #[test]
     fn test_average_speed_overflow() {
-        let mut tracker = WordSpeedTracker::new();
+        let mut tracker = WordSpeedTracker::default();
         for i in 0..15 {
             tracker.update_recent_word_speeds(i as f32);
         }

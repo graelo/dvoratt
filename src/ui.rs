@@ -116,7 +116,7 @@ fn draw_typing_area(f: &mut Frame, app: &App, current_chunk: Rect, input_chunk: 
                 .title("Avg Speed (Last 10 Words)"),
         );
     f.render_widget(avg_speed_paragraph, typing_area[1]);
-    let styled_input = generate_styled_input(&app.user_input, &app.performance.mistyped_chars);
+    let styled_input = generate_styled_input(&app.user_input, app.performance.mistyped_chars());
     let user_input = Paragraph::new(Line::from(styled_input))
         .style(Style::default().fg(Color::Green))
         .block(Block::default().borders(Borders::ALL).title("Your Input"));
@@ -193,9 +193,10 @@ fn draw_problem_words(f: &mut Frame, app: &App, area: Rect) {
         .get_problem_words()
         .iter()
         .take(10)
-        .map(|(word, speed, backspaces, correct_attempts)| {
+        .map(|e| {
             ListItem::new(Line::from(vec![Span::raw(format!(
-                "{word}: {speed:.2} WPM, {backspaces} backspaces, {correct_attempts} correct"
+                "{}: {:.2} WPM, {} backspaces, {} correct",
+                e.word, e.avg_speed, e.backspaces, e.correct_attempts
             ))]))
         })
         .collect();

@@ -99,7 +99,8 @@ where
                         app.change_word_list(next_index);
                     }
                     KeyCode::BackTab => {
-                        let next_index = (app.current_list_index - 1) % app.word_lists.len();
+                        let next_index = (app.current_list_index + app.word_lists.len() - 1)
+                            % app.word_lists.len();
                         app.change_word_list(next_index);
                     }
                     _ => app.on_key(key.code),

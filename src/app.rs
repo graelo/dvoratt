@@ -15,33 +15,26 @@ use crate::word_queue::WordQueue;
 /// This struct contains all the state needed to run the typing practice application,
 /// including the current word queue, performance metrics, available word lists,
 /// and user input state.
-pub struct App {
+pub(crate) struct App {
     /// Performance tracking and statistics
-    pub performance: PerformanceTracker,
+    pub(crate) performance: PerformanceTracker,
     /// Queue of words to type, including problem words
-    pub word_queue: WordQueue,
+    pub(crate) word_queue: WordQueue,
     /// Available word lists for different difficulty levels
-    pub word_lists: Vec<WordList>,
+    pub(crate) word_lists: Vec<WordList>,
     /// Index of the currently selected word list
-    pub current_list_index: usize,
+    pub(crate) current_list_index: usize,
     /// Current user input for the word being typed
-    pub user_input: String,
+    pub(crate) user_input: String,
 }
 
 impl App {
-    /// Creates a new `App` instance with default settings.
-    ///
-    /// Initializes the application with loaded word lists, sets up the word queue
-    /// with the second word list (10-key home row), and prepares performance tracking.
-    ///
-    /// # Returns
-    ///
-    /// A new `App` instance ready for use.
-    pub fn new() -> Self {
+    /// Create a new `App` instance with default settings.
+    pub(crate) fn new() -> Self {
         let word_lists = load_word_lists();
         let word_queue = WordQueue::new(word_lists[1].words.clone());
         App {
-            performance: PerformanceTracker::new(),
+            performance: PerformanceTracker::default(),
             word_queue,
             word_lists: word_lists.clone(),
             current_list_index: 1,
@@ -49,20 +42,20 @@ impl App {
         }
     }
 
-    pub fn on_key(&mut self, key: KeyCode) {
+    pub(crate) fn on_key(&mut self, key: KeyCode) {
         let current_time = Instant::now();
 
-        if self.performance.word_start_time.is_none() && key != KeyCode::Backspace {
-            self.performance.word_start_time = Some(current_time);
+        if key != KeyCode::Backspace {
+            self.performance.start_word_if_needed(current_time);
         }
 
-        if let Some(last_time) = self.performance.last_keypress_time {
+        if let Some(last_time) = self.performance.last_keypress_time() {
             let duration = current_time.duration_since(last_time);
             self.performance
                 .update_struggle_combinations(duration, &self.user_input);
         }
 
-        self.performance.last_keypress_time = Some(current_time);
+        self.performance.set_last_keypress_time(current_time);
 
         match key {
             KeyCode::Char(c) => {
@@ -74,7 +67,7 @@ impl App {
                         let expected_char =
                             current_word.chars().nth(self.user_input.len()).unwrap();
                         if c != expected_char {
-                            self.performance.mistyped_chars.push(self.user_input.len());
+                            self.performance.record_mistype(self.user_input.len());
                         }
                     }
                     self.user_input.push(c);
@@ -83,12 +76,8 @@ impl App {
             KeyCode::Backspace => {
                 if !self.user_input.is_empty() {
                     self.user_input.pop();
-                    if let Some(&last) = self.performance.mistyped_chars.last() {
-                        if last == self.user_input.len() {
-                            self.performance.mistyped_chars.pop();
-                        }
-                    }
-                    self.performance.backspace_count += 1;
+                    self.performance.undo_mistype_at(self.user_input.len());
+                    self.performance.record_backspace();
                     self.add_problem_word();
                 }
             }
@@ -103,7 +92,8 @@ impl App {
             let user_input_clone = self.user_input.clone();
             self.performance
                 .update_fastest_slowest_words(&user_input_clone, speed);
-            self.update_stats();
+            self.performance
+                .record_word_completed(self.word_queue.current_word().len() as u32);
 
             if self.word_queue.is_current_word_problem() {
                 self.word_queue.update_problem_word_correct_attempt();
@@ -124,17 +114,7 @@ impl App {
             self.add_problem_word();
         }
         self.user_input.clear();
-        self.performance.mistyped_chars.clear();
-        self.performance.backspace_count = 0;
-        self.performance.word_start_time = None;
-    }
-
-    fn update_stats(&mut self) {
-        if let Some(start_time) = self.performance.word_start_time {
-            let elapsed = start_time.elapsed();
-            self.performance.total_time += elapsed;
-            self.performance.total_correct_chars += self.word_queue.current_word().len() as u32;
-        }
+        self.performance.reset_word_state();
     }
 
     fn add_problem_word(&mut self) {
@@ -146,7 +126,7 @@ impl App {
     }
 
     fn calculate_word_speed(&self) -> f32 {
-        if let Some(start_time) = self.performance.word_start_time {
+        if let Some(start_time) = self.performance.word_start_time() {
             let elapsed = start_time.elapsed();
             let minutes = elapsed.as_secs_f32() / 60.0;
             (self.word_queue.current_word().len() as f32 / 5.0) / minutes
@@ -155,27 +135,25 @@ impl App {
         }
     }
 
-    pub fn average_speed_last_10_words(&self) -> f32 {
+    pub(crate) fn average_speed_last_10_words(&self) -> f32 {
         self.performance.average_speed_last_10_words()
     }
 
-    pub fn generate_final_scores(&self) -> String {
+    pub(crate) fn generate_final_scores(&self) -> String {
         self.performance.generate_final_scores()
     }
 
-    pub fn on_tick(&mut self) {
+    pub(crate) fn on_tick(&mut self) {
         // This method can be used for periodic updates, such as updating the timer
         // or refreshing the struggle combinations list
     }
 
-    pub fn change_word_list(&mut self, index: usize) {
+    pub(crate) fn change_word_list(&mut self, index: usize) {
         if index < self.word_lists.len() {
             self.current_list_index = index;
             let new_words = self.word_lists[index].words.clone();
             self.word_queue.change_word_list(new_words);
-
-            self.performance.word_start_time = None;
-            self.performance.backspace_count = 0;
+            self.performance.reset_word_state();
             self.user_input.clear();
         }
     }
@@ -200,7 +178,6 @@ mod tests {
         let mut app = App::new();
         let initial_word = app.word_queue.current_word().to_string();
 
-        // Type the first character
         if let Some(c) = initial_word.chars().next() {
             app.on_key(KeyCode::Char(c));
             assert_eq!(app.user_input, c.to_string());
@@ -212,12 +189,11 @@ mod tests {
         let mut app = App::new();
         let initial_word = app.word_queue.current_word().to_string();
 
-        // Type a character then backspace
         if let Some(c) = initial_word.chars().next() {
             app.on_key(KeyCode::Char(c));
             app.on_key(KeyCode::Backspace);
             assert!(app.user_input.is_empty());
-            assert_eq!(app.performance.backspace_count, 1);
+            assert!(app.performance.backspace_used());
         }
     }
 
@@ -226,13 +202,11 @@ mod tests {
         let mut app = App::new();
         let current_word = app.word_queue.current_word().to_string();
 
-        // Type the full word and press space
         for c in current_word.chars() {
             app.on_key(KeyCode::Char(c));
         }
         app.on_key(KeyCode::Char(' '));
 
-        // Word should be completed and input cleared
         assert!(app.user_input.is_empty());
     }
 
@@ -241,7 +215,6 @@ mod tests {
         let mut app = App::new();
         let original_word = app.word_queue.current_word().to_string();
 
-        // Change to a different word list
         if app.word_lists.len() > 1 {
             app.change_word_list(0);
             assert_eq!(app.current_list_index, 0);

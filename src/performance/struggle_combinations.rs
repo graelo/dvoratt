@@ -1,16 +1,11 @@
 use std::time::Duration;
 
-pub struct StruggleCombinations {
-    pub combinations: Vec<(String, f32)>,
+#[derive(Default)]
+pub(crate) struct StruggleCombinations {
+    combinations: Vec<(String, f32)>,
 }
 
 impl StruggleCombinations {
-    pub fn new() -> Self {
-        StruggleCombinations {
-            combinations: Vec::new(),
-        }
-    }
-
     pub fn update(&mut self, duration: Duration, user_input: &str) {
         let combos = self.get_letter_combinations(user_input);
         for combo in combos {
@@ -23,7 +18,7 @@ impl StruggleCombinations {
             }
         }
         self.combinations
-            .sort_by(|a, b| a.1.partial_cmp(&b.1).unwrap());
+            .sort_by(|a, b| a.1.partial_cmp(&b.1).unwrap_or(std::cmp::Ordering::Equal));
         self.combinations.truncate(50);
     }
 
@@ -57,13 +52,13 @@ mod tests {
 
     #[test]
     fn test_new_struggle_combinations() {
-        let tracker = StruggleCombinations::new();
+        let tracker = StruggleCombinations::default();
         assert!(tracker.get_combinations().is_empty());
     }
 
     #[test]
     fn test_get_letter_combinations() {
-        let tracker = StruggleCombinations::new();
+        let tracker = StruggleCombinations::default();
         let combos = tracker.get_letter_combinations("hello");
         // For "hello": he, el, ll, lo (2-char) + hel, ell, llo (3-char) = 7 combinations
         assert_eq!(combos.len(), 7);
@@ -71,7 +66,7 @@ mod tests {
 
     #[test]
     fn test_update_combinations() {
-        let mut tracker = StruggleCombinations::new();
+        let mut tracker = StruggleCombinations::default();
         let duration = Duration::from_secs(1);
 
         tracker.update(duration, "test");
@@ -81,7 +76,7 @@ mod tests {
 
     #[test]
     fn test_calculate_combo_speed() {
-        let tracker = StruggleCombinations::new();
+        let tracker = StruggleCombinations::default();
         let duration = Duration::from_secs(60); // 1 minute
         let speed = tracker.calculate_combo_speed("ab", duration);
         // (2 chars / 5) / 1 minute = 0.4 WPM
@@ -90,7 +85,7 @@ mod tests {
 
     #[test]
     fn test_combinations_limit() {
-        let mut tracker = StruggleCombinations::new();
+        let mut tracker = StruggleCombinations::default();
         let duration = Duration::from_secs(1);
 
         // Add many combinations
