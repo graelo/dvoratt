@@ -88,7 +88,7 @@ fn draw_typing_area(f: &mut Frame, app: &App, current_chunk: Rect, input_chunk: 
     let words_to_type = vec![
         if app.word_queue.is_current_word_problem() {
             Span::styled(
-                format!("{}{}", current_word, repetition_count),
+                format!("{current_word}{repetition_count}"),
                 Style::default()
                     .fg(Color::Yellow)
                     .add_modifier(Modifier::UNDERLINED),
@@ -153,8 +153,7 @@ fn draw_fastest_words(f: &mut Frame, app: &App, area: Rect) {
         .take(10)
         .map(|(word, speed)| {
             ListItem::new(Line::from(vec![Span::raw(format!(
-                "{}: {:.2} WPM",
-                word, speed
+                "{word}: {speed:.2} WPM"
             ))]))
         })
         .collect();
@@ -175,8 +174,7 @@ fn draw_slowest_words(f: &mut Frame, app: &App, area: Rect) {
         .take(10)
         .map(|(word, speed)| {
             ListItem::new(Line::from(vec![Span::raw(format!(
-                "{}: {:.2} WPM",
-                word, speed
+                "{word}: {speed:.2} WPM"
             ))]))
         })
         .collect();
@@ -197,8 +195,7 @@ fn draw_problem_words(f: &mut Frame, app: &App, area: Rect) {
         .take(10)
         .map(|(word, speed, backspaces, correct_attempts)| {
             ListItem::new(Line::from(vec![Span::raw(format!(
-                "{}: {:.2} WPM, {} backspaces, {} correct",
-                word, speed, backspaces, correct_attempts
+                "{word}: {speed:.2} WPM, {backspaces} backspaces, {correct_attempts} correct"
             ))]))
         })
         .collect();
@@ -218,8 +215,7 @@ fn draw_struggle_combinations(f: &mut Frame, app: &App, area: Rect) {
         .take(20)
         .map(|(combo, speed)| {
             ListItem::new(Line::from(vec![Span::raw(format!(
-                "{}: {:.2} WPM",
-                combo, speed
+                "{combo}: {speed:.2} WPM"
             ))]))
         })
         .collect();

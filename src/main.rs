@@ -41,7 +41,7 @@ fn main() -> Result<(), Box<dyn Error>> {
             println!("{}", app.generate_final_scores());
         }
     } else if let Err(err) = res {
-        println!("{:?}", err);
+        println!("{err:?}");
     }
 
     Ok(())
