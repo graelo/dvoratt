@@ -5,7 +5,6 @@ use crossterm::{
 };
 use ratatui::{backend::CrosstermBackend, Terminal};
 use std::error::Error;
-use std::io;
 use std::time::{Duration, Instant};
 
 mod app;
@@ -51,12 +50,17 @@ fn main() -> Result<(), Box<dyn Error>> {
 fn run_app<B: ratatui::backend::Backend>(
     terminal: &mut Terminal<B>,
     app: &mut App,
-) -> io::Result<bool> {
+) -> Result<bool, Box<dyn Error>>
+where
+    B::Error: 'static,
+{
     let mut last_tick = Instant::now();
     let tick_rate = Duration::from_millis(250);
 
     loop {
-        terminal.draw(|f| ui::draw(f, app))?;
+        terminal
+            .draw(|f| ui::draw(f, app))
+            .map_err(|e| Box::new(e) as Box<dyn Error>)?;
 
         let timeout = tick_rate
             .checked_sub(last_tick.elapsed())
