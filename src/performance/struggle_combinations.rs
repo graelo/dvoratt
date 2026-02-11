@@ -49,3 +49,56 @@ impl StruggleCombinations {
         &self.combinations
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use std::time::Duration;
+
+    #[test]
+    fn test_new_struggle_combinations() {
+        let tracker = StruggleCombinations::new();
+        assert!(tracker.get_combinations().is_empty());
+    }
+
+    #[test]
+    fn test_get_letter_combinations() {
+        let tracker = StruggleCombinations::new();
+        let combos = tracker.get_letter_combinations("hello");
+        // For "hello": he, el, ll, lo (2-char) + hel, ell, llo (3-char) = 7 combinations
+        assert_eq!(combos.len(), 7);
+    }
+
+    #[test]
+    fn test_update_combinations() {
+        let mut tracker = StruggleCombinations::new();
+        let duration = Duration::from_secs(1);
+
+        tracker.update(duration, "test");
+        let combos = tracker.get_combinations();
+        assert!(!combos.is_empty());
+    }
+
+    #[test]
+    fn test_calculate_combo_speed() {
+        let tracker = StruggleCombinations::new();
+        let duration = Duration::from_secs(60); // 1 minute
+        let speed = tracker.calculate_combo_speed("ab", duration);
+        // (2 chars / 5) / 1 minute = 0.4 WPM
+        assert_eq!(speed, 0.4);
+    }
+
+    #[test]
+    fn test_combinations_limit() {
+        let mut tracker = StruggleCombinations::new();
+        let duration = Duration::from_secs(1);
+
+        // Add many combinations
+        for i in 0..60 {
+            tracker.update(duration, &format!("word{}", i));
+        }
+
+        let combos = tracker.get_combinations();
+        assert_eq!(combos.len(), 50); // Should be limited to 50
+    }
+}

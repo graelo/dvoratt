@@ -157,3 +157,88 @@ impl App {
         }
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crossterm::event::KeyCode;
+
+    #[test]
+    fn test_app_new() {
+        let app = App::new();
+        assert!(!app.word_lists.is_empty());
+        assert_eq!(app.current_list_index, 1);
+        assert!(app.user_input.is_empty());
+        assert!(!app.word_queue.current_word().is_empty());
+    }
+
+    #[test]
+    fn test_on_key_char() {
+        let mut app = App::new();
+        let initial_word = app.word_queue.current_word().to_string();
+
+        // Type the first character
+        if let Some(c) = initial_word.chars().next() {
+            app.on_key(KeyCode::Char(c));
+            assert_eq!(app.user_input, c.to_string());
+        }
+    }
+
+    #[test]
+    fn test_on_key_backspace() {
+        let mut app = App::new();
+        let initial_word = app.word_queue.current_word().to_string();
+
+        // Type a character then backspace
+        if let Some(c) = initial_word.chars().next() {
+            app.on_key(KeyCode::Char(c));
+            app.on_key(KeyCode::Backspace);
+            assert!(app.user_input.is_empty());
+            assert_eq!(app.performance.backspace_count, 1);
+        }
+    }
+
+    #[test]
+    fn test_on_key_space() {
+        let mut app = App::new();
+        let current_word = app.word_queue.current_word().to_string();
+
+        // Type the full word and press space
+        for c in current_word.chars() {
+            app.on_key(KeyCode::Char(c));
+        }
+        app.on_key(KeyCode::Char(' '));
+
+        // Word should be completed and input cleared
+        assert!(app.user_input.is_empty());
+    }
+
+    #[test]
+    fn test_change_word_list() {
+        let mut app = App::new();
+        let original_word = app.word_queue.current_word().to_string();
+
+        // Change to a different word list
+        if app.word_lists.len() > 1 {
+            app.change_word_list(0);
+            assert_eq!(app.current_list_index, 0);
+            assert_ne!(app.word_queue.current_word(), original_word);
+            assert!(app.user_input.is_empty());
+        }
+    }
+
+    #[test]
+    fn test_average_speed_last_10_words() {
+        let app = App::new();
+        let speed = app.average_speed_last_10_words();
+        assert!(speed >= 0.0);
+    }
+
+    #[test]
+    fn test_generate_final_scores() {
+        let app = App::new();
+        let scores = app.generate_final_scores();
+        assert!(!scores.is_empty());
+        assert!(scores.contains("average_speed"));
+    }
+}

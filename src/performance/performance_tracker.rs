@@ -117,3 +117,59 @@ impl PerformanceTracker {
         serde_json::to_string_pretty(&json).unwrap_or_else(|_| "{}".to_string())
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use std::time::Duration;
+
+    #[test]
+    fn test_new_performance_tracker() {
+        let tracker = PerformanceTracker::new();
+        assert_eq!(tracker.total_time, Duration::new(0, 0));
+        assert_eq!(tracker.total_correct_chars, 0);
+        assert_eq!(tracker.backspace_count, 0);
+        assert!(tracker.mistyped_chars.is_empty());
+    }
+
+    #[test]
+    fn test_backspace_used() {
+        let mut tracker = PerformanceTracker::new();
+        assert!(!tracker.backspace_used());
+
+        tracker.backspace_count = 1;
+        assert!(tracker.backspace_used());
+    }
+
+    #[test]
+    fn test_update_recent_word_speeds() {
+        let mut tracker = PerformanceTracker::new();
+        tracker.update_recent_word_speeds(60.0);
+        tracker.update_recent_word_speeds(70.0);
+
+        let avg = tracker.average_speed_last_10_words();
+        assert!(avg > 0.0);
+    }
+
+    #[test]
+    fn test_average_wpm() {
+        let mut tracker = PerformanceTracker::new();
+        tracker.total_time = Duration::from_secs(60); // 1 minute
+        tracker.total_correct_chars = 250; // 50 words * 5 chars
+
+        let avg_wpm = tracker.average_wpm();
+        assert_eq!(avg_wpm, 50.0);
+    }
+
+    #[test]
+    fn test_generate_final_scores() {
+        let tracker = PerformanceTracker::new();
+        let result = tracker.generate_final_scores();
+
+        assert!(result.contains("average_speed"));
+        assert!(result.contains("problem_words"));
+        assert!(result.contains("fastest_words"));
+        assert!(result.contains("slowest_words"));
+        assert!(result.contains("struggle_combinations"));
+    }
+}
