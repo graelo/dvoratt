@@ -1,3 +1,8 @@
+//! Application state and core logic for the Dvorak typing practice.
+//!
+//! This module contains the main `App` struct that manages the application state,
+//! including the word queue, performance tracking, and user input handling.
+
 use crossterm::event::KeyCode;
 use std::time::Instant;
 
@@ -5,15 +10,33 @@ use crate::performance::PerformanceTracker;
 use crate::word_lists::{load_word_lists, WordList};
 use crate::word_queue::WordQueue;
 
+/// The main application state.
+///
+/// This struct contains all the state needed to run the typing practice application,
+/// including the current word queue, performance metrics, available word lists,
+/// and user input state.
 pub struct App {
+    /// Performance tracking and statistics
     pub performance: PerformanceTracker,
+    /// Queue of words to type, including problem words
     pub word_queue: WordQueue,
+    /// Available word lists for different difficulty levels
     pub word_lists: Vec<WordList>,
+    /// Index of the currently selected word list
     pub current_list_index: usize,
+    /// Current user input for the word being typed
     pub user_input: String,
 }
 
 impl App {
+    /// Creates a new `App` instance with default settings.
+    ///
+    /// Initializes the application with loaded word lists, sets up the word queue
+    /// with the second word list (10-key home row), and prepares performance tracking.
+    ///
+    /// # Returns
+    ///
+    /// A new `App` instance ready for use.
     pub fn new() -> Self {
         let word_lists = load_word_lists();
         let word_queue = WordQueue::new(word_lists[1].words.clone());

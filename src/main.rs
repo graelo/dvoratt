@@ -15,6 +15,17 @@ mod word_queue;
 
 use crate::app::App;
 
+/// Main entry point for the Dvorak typing practice application.
+///
+/// This function sets up the terminal, initializes the application, runs the main loop,
+/// and handles cleanup. It returns a `Result` indicating success or failure.
+///
+/// # Errors
+///
+/// This function can return errors from:
+/// - Terminal setup/teardown operations
+/// - Terminal drawing operations
+/// - Event handling operations
 fn main() -> Result<()> {
     // Setup terminal
     enable_raw_mode()?;
@@ -47,6 +58,20 @@ fn main() -> Result<()> {
     Ok(())
 }
 
+/// Main application loop that handles terminal drawing and user input.
+///
+/// This function runs continuously, drawing the UI and processing key events
+/// until the user presses Ctrl+C to quit. It returns `true` when the user
+/// quits normally, or propagates any errors that occur.
+///
+/// # Type Parameters
+///
+/// * `B`: The terminal backend type
+///
+/// # Returns
+///
+/// Returns `Ok(true)` when the user quits the application normally.
+/// Returns `Err` if any terminal or drawing errors occur.
 fn run_app<B: ratatui::backend::Backend>(terminal: &mut Terminal<B>, app: &mut App) -> Result<bool>
 where
     B::Error: 'static + Send + Sync,
