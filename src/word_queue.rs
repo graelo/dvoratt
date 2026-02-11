@@ -107,3 +107,66 @@ impl WordQueue {
         self.current_word = self.all_words.pop().unwrap_or_default();
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_new_word_queue() {
+        let words = vec!["hello".to_string(), "world".to_string(), "rust".to_string()];
+        let queue = WordQueue::new(words);
+        assert!(!queue.current_word().is_empty());
+        assert_eq!(queue.next_words().len(), 2);
+    }
+
+    #[test]
+    fn test_next_word() {
+        let words = vec![
+            "first".to_string(),
+            "second".to_string(),
+            "third".to_string(),
+            "fourth".to_string(),
+        ];
+        let mut queue = WordQueue::new(words);
+        let first_word = queue.current_word().to_string();
+
+        queue.next_word();
+        let second_word = queue.current_word().to_string();
+
+        assert_ne!(first_word, second_word);
+        assert!(!second_word.is_empty());
+    }
+
+    #[test]
+    fn test_add_problem_word() {
+        let words = vec!["hello".to_string(), "world".to_string()];
+        let mut queue = WordQueue::new(words);
+
+        queue.add_problem_word("problem".to_string());
+        assert!(queue.is_current_word_problem());
+        assert_eq!(queue.get_current_problem_word_repetitions(), 0);
+    }
+
+    #[test]
+    fn test_update_problem_word_correct_attempt() {
+        let words = vec!["hello".to_string(), "world".to_string()];
+        let mut queue = WordQueue::new(words);
+
+        queue.add_problem_word("problem".to_string());
+        queue.update_problem_word_correct_attempt();
+        assert_eq!(queue.get_current_problem_word_repetitions(), 1);
+    }
+
+    #[test]
+    fn test_change_word_list() {
+        let words = vec!["hello".to_string(), "world".to_string()];
+        let mut queue = WordQueue::new(words);
+
+        let new_words = vec!["rust".to_string(), "test".to_string(), "code".to_string()];
+        queue.change_word_list(new_words);
+
+        assert_ne!(queue.current_word(), "hello");
+        assert_ne!(queue.current_word(), "world");
+    }
+}

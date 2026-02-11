@@ -33,3 +33,56 @@ impl ProblemWords {
         &self.words
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_new_problem_words() {
+        let problem_words = ProblemWords::new();
+        assert!(problem_words.get_words().is_empty());
+    }
+
+    #[test]
+    fn test_add_new_word() {
+        let mut problem_words = ProblemWords::new();
+        problem_words.add("test".to_string(), 25.0, 2);
+        assert_eq!(problem_words.get_words().len(), 1);
+    }
+
+    #[test]
+    fn test_add_existing_word() {
+        let mut problem_words = ProblemWords::new();
+        problem_words.add("test".to_string(), 25.0, 2);
+        problem_words.add("test".to_string(), 30.0, 3);
+
+        let words = problem_words.get_words();
+        assert_eq!(words.len(), 1);
+        assert_eq!(words[0].1, 27.5); // Average of 25.0 and 30.0
+    }
+
+    #[test]
+    fn test_update_correct_attempts() {
+        let mut problem_words = ProblemWords::new();
+        problem_words.add("test".to_string(), 25.0, 2);
+        problem_words.update_correct_attempts("test");
+
+        let words = problem_words.get_words();
+        assert_eq!(words[0].3, 1);
+    }
+
+    #[test]
+    fn test_remove_learned_words() {
+        let mut problem_words = ProblemWords::new();
+        problem_words.add("fast".to_string(), 40.0, 0); // Should be removed (speed >= 30.0 AND correct_attempts >= 2)
+        problem_words.add("slow".to_string(), 20.0, 0); // Should be kept (speed < 30.0)
+        problem_words.update_correct_attempts("fast");
+        problem_words.update_correct_attempts("fast"); // 2 correct attempts
+
+        problem_words.remove_learned_words();
+        let words = problem_words.get_words();
+        assert_eq!(words.len(), 1); // Only "slow" remains
+        assert_eq!(words[0].0, "slow");
+    }
+}
