@@ -1,10 +1,10 @@
+use anyhow::Result;
 use crossterm::{
     event::{self, DisableMouseCapture, EnableMouseCapture, Event, KeyCode, KeyModifiers},
     execute,
     terminal::{disable_raw_mode, enable_raw_mode, EnterAlternateScreen, LeaveAlternateScreen},
 };
 use ratatui::{backend::CrosstermBackend, Terminal};
-use std::error::Error;
 use std::time::{Duration, Instant};
 
 mod app;
@@ -15,7 +15,7 @@ mod word_queue;
 
 use crate::app::App;
 
-fn main() -> Result<(), Box<dyn Error>> {
+fn main() -> Result<()> {
     // Setup terminal
     enable_raw_mode()?;
     let mut stdout = std::io::stdout();
@@ -47,12 +47,9 @@ fn main() -> Result<(), Box<dyn Error>> {
     Ok(())
 }
 
-fn run_app<B: ratatui::backend::Backend>(
-    terminal: &mut Terminal<B>,
-    app: &mut App,
-) -> Result<bool, Box<dyn Error>>
+fn run_app<B: ratatui::backend::Backend>(terminal: &mut Terminal<B>, app: &mut App) -> Result<bool>
 where
-    B::Error: 'static,
+    B::Error: 'static + Send + Sync,
 {
     let mut last_tick = Instant::now();
     let tick_rate = Duration::from_millis(250);
@@ -60,7 +57,7 @@ where
     loop {
         terminal
             .draw(|f| ui::draw(f, app))
-            .map_err(|e| Box::new(e) as Box<dyn Error>)?;
+            .map_err(anyhow::Error::new)?;
 
         let timeout = tick_rate
             .checked_sub(last_tick.elapsed())
