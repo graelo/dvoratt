@@ -1,10 +1,10 @@
+use anyhow::Result;
 use crossterm::{
     event::{self, DisableMouseCapture, EnableMouseCapture, Event, KeyCode, KeyModifiers},
     execute,
     terminal::{disable_raw_mode, enable_raw_mode, EnterAlternateScreen, LeaveAlternateScreen},
 };
 use ratatui::{backend::CrosstermBackend, Terminal};
-use std::error::Error;
 use std::time::{Duration, Instant};
 
 mod app;
@@ -15,7 +15,18 @@ mod word_queue;
 
 use crate::app::App;
 
-fn main() -> Result<(), Box<dyn Error>> {
+/// Main entry point for the Dvorak typing practice application.
+///
+/// This function sets up the terminal, initializes the application, runs the main loop,
+/// and handles cleanup. It returns a `Result` indicating success or failure.
+///
+/// # Errors
+///
+/// This function can return errors from:
+/// - Terminal setup/teardown operations
+/// - Terminal drawing operations
+/// - Event handling operations
+fn main() -> Result<()> {
     // Setup terminal
     enable_raw_mode()?;
     let mut stdout = std::io::stdout();
@@ -47,12 +58,23 @@ fn main() -> Result<(), Box<dyn Error>> {
     Ok(())
 }
 
-fn run_app<B: ratatui::backend::Backend>(
-    terminal: &mut Terminal<B>,
-    app: &mut App,
-) -> Result<bool, Box<dyn Error>>
+/// Main application loop that handles terminal drawing and user input.
+///
+/// This function runs continuously, drawing the UI and processing key events
+/// until the user presses Ctrl+C to quit. It returns `true` when the user
+/// quits normally, or propagates any errors that occur.
+///
+/// # Type Parameters
+///
+/// * `B`: The terminal backend type
+///
+/// # Returns
+///
+/// Returns `Ok(true)` when the user quits the application normally.
+/// Returns `Err` if any terminal or drawing errors occur.
+fn run_app<B: ratatui::backend::Backend>(terminal: &mut Terminal<B>, app: &mut App) -> Result<bool>
 where
-    B::Error: 'static,
+    B::Error: 'static + Send + Sync,
 {
     let mut last_tick = Instant::now();
     let tick_rate = Duration::from_millis(250);
@@ -60,7 +82,7 @@ where
     loop {
         terminal
             .draw(|f| ui::draw(f, app))
-            .map_err(|e| Box::new(e) as Box<dyn Error>)?;
+            .map_err(anyhow::Error::new)?;
 
         let timeout = tick_rate
             .checked_sub(last_tick.elapsed())
@@ -77,7 +99,8 @@ where
                         app.change_word_list(next_index);
                     }
                     KeyCode::BackTab => {
-                        let next_index = (app.current_list_index - 1) % app.word_lists.len();
+                        let next_index = (app.current_list_index + app.word_lists.len() - 1)
+                            % app.word_lists.len();
                         app.change_word_list(next_index);
                     }
                     _ => app.on_key(key.code),

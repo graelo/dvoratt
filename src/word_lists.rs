@@ -9,12 +9,12 @@ const LEVEL4_GZIP: &[u8] = include_bytes!("../lessons/level4.txt.gz");
 const LEVEL5_GZIP: &[u8] = include_bytes!("../lessons/level5.txt.gz");
 
 #[derive(Debug, Clone)]
-pub struct WordList {
-    pub name: String,
-    pub words: Vec<String>,
+pub(crate) struct WordList {
+    pub(crate) name: String,
+    pub(crate) words: Vec<String>,
 }
 
-pub fn load_word_lists() -> Vec<WordList> {
+pub(crate) fn load_word_lists() -> Vec<WordList> {
     vec![
         WordList {
             name: "Home Row - 8 keys".to_string(),
@@ -40,9 +40,10 @@ pub fn load_word_lists() -> Vec<WordList> {
 }
 
 fn load_words_from_embedded(source: &[u8]) -> Vec<String> {
-    let content = decompress_gzip(source);
-    let words: Vec<String> = content.lines().map(|l| l.to_string()).collect();
-    words
+    decompress_gzip(source)
+        .lines()
+        .map(|l| l.to_string())
+        .collect()
 }
 
 fn decompress_gzip(compressed_data: &[u8]) -> String {

@@ -2,24 +2,27 @@ use rand::rng;
 use rand::seq::SliceRandom;
 use std::collections::VecDeque;
 
-pub struct WordQueue {
+pub(crate) struct WordQueue {
     problem_word_queue: VecDeque<(String, u8)>,
+    original_words: Vec<String>,
     all_words: Vec<String>,
     current_word: String,
     next_words: Vec<String>,
     is_repeating_problem_word: bool,
     problem_word_repetitions: u8,
 }
+
 impl WordQueue {
-    pub fn is_current_word_problem(&self) -> bool {
+    pub(crate) fn is_current_word_problem(&self) -> bool {
         self.is_repeating_problem_word
     }
 
-    pub fn get_current_problem_word_repetitions(&self) -> u8 {
+    pub(crate) fn get_current_problem_word_repetitions(&self) -> u8 {
         self.problem_word_repetitions
     }
 
-    pub fn new(initial_words: Vec<String>) -> Self {
+    pub(crate) fn new(initial_words: Vec<String>) -> Self {
+        let original_words = initial_words.clone();
         let mut all_words = initial_words;
         all_words.shuffle(&mut rng());
         let current_word = all_words.pop().unwrap_or_default();
@@ -30,6 +33,7 @@ impl WordQueue {
 
         WordQueue {
             problem_word_queue: VecDeque::new(),
+            original_words,
             all_words,
             current_word,
             next_words,
@@ -38,7 +42,7 @@ impl WordQueue {
         }
     }
 
-    pub fn next_word(&mut self) {
+    pub(crate) fn next_word(&mut self) {
         if self.is_repeating_problem_word {
             if self.problem_word_repetitions >= 3 {
                 self.is_repeating_problem_word = false;
@@ -65,6 +69,7 @@ impl WordQueue {
 
         while self.next_words.len() < 2 {
             if self.all_words.is_empty() {
+                self.all_words = self.original_words.clone();
                 self.all_words.shuffle(&mut rng());
             }
             self.next_words
@@ -72,7 +77,7 @@ impl WordQueue {
         }
     }
 
-    pub fn add_problem_word(&mut self, word: String) {
+    pub(crate) fn add_problem_word(&mut self, word: String) {
         if let Some(index) = self.problem_word_queue.iter().position(|(w, _)| w == &word) {
             self.problem_word_queue[index].1 = 0;
         } else {
@@ -82,21 +87,22 @@ impl WordQueue {
         self.problem_word_repetitions = 0;
     }
 
-    pub fn update_problem_word_correct_attempt(&mut self) {
+    pub(crate) fn update_problem_word_correct_attempt(&mut self) {
         if self.is_repeating_problem_word {
             self.problem_word_repetitions += 1;
         }
     }
 
-    pub fn current_word(&self) -> &str {
+    pub(crate) fn current_word(&self) -> &str {
         &self.current_word
     }
 
-    pub fn next_words(&self) -> &[String] {
+    pub(crate) fn next_words(&self) -> &[String] {
         &self.next_words
     }
 
-    pub fn change_word_list(&mut self, new_words: Vec<String>) {
+    pub(crate) fn change_word_list(&mut self, new_words: Vec<String>) {
+        self.original_words = new_words.clone();
         self.all_words = new_words;
         self.all_words.shuffle(&mut rng());
 

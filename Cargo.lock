@@ -321,6 +321,7 @@ dependencies = [
 name = "dvoratt"
 version = "0.1.1"
 dependencies = [
+ "anyhow",
  "crossterm",
  "flate2",
  "rand 0.10.0",

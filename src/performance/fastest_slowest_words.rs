@@ -1,18 +1,12 @@
 use std::cmp::Ordering;
 
-pub struct FastestSlowestWords {
-    pub fastest_words: Vec<(String, f32)>,
-    pub slowest_words: Vec<(String, f32)>,
+#[derive(Default)]
+pub(crate) struct FastestSlowestWords {
+    fastest_words: Vec<(String, f32)>,
+    slowest_words: Vec<(String, f32)>,
 }
 
 impl FastestSlowestWords {
-    pub fn new() -> Self {
-        FastestSlowestWords {
-            fastest_words: Vec::new(),
-            slowest_words: Vec::new(),
-        }
-    }
-
     pub fn update(&mut self, word: &str, speed: f32) {
         self.update_fastest_words(word, speed);
         self.update_slowest_words(word, speed);
@@ -57,14 +51,14 @@ mod tests {
 
     #[test]
     fn test_new_fastest_slowest_words() {
-        let tracker = FastestSlowestWords::new();
+        let tracker = FastestSlowestWords::default();
         assert!(tracker.get_fastest_words().is_empty());
         assert!(tracker.get_slowest_words().is_empty());
     }
 
     #[test]
     fn test_update_fastest_words() {
-        let mut tracker = FastestSlowestWords::new();
+        let mut tracker = FastestSlowestWords::default();
         tracker.update("fast", 100.0);
         tracker.update("faster", 120.0);
         tracker.update("slow", 50.0);
@@ -78,7 +72,7 @@ mod tests {
 
     #[test]
     fn test_update_slowest_words() {
-        let mut tracker = FastestSlowestWords::new();
+        let mut tracker = FastestSlowestWords::default();
         tracker.update("slow", 30.0);
         tracker.update("slower", 20.0);
         tracker.update("fast", 100.0);
@@ -92,7 +86,7 @@ mod tests {
 
     #[test]
     fn test_fastest_words_limit() {
-        let mut tracker = FastestSlowestWords::new();
+        let mut tracker = FastestSlowestWords::default();
         for i in 0..15 {
             tracker.update(&format!("word{}", i), i as f32);
         }
@@ -104,7 +98,7 @@ mod tests {
 
     #[test]
     fn test_slowest_words_limit() {
-        let mut tracker = FastestSlowestWords::new();
+        let mut tracker = FastestSlowestWords::default();
         for i in 0..15 {
             tracker.update(&format!("word{}", i), i as f32);
         }
