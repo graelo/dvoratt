@@ -3,7 +3,7 @@
 name = "dvoratt"
 version = "0.1.1"
 edition = "2021"
-rust-version = "1.85"
+rust-version = "1.88"
 description = "Dvorak Typing Practice Terminal App"
 readme = "README.md"
 
