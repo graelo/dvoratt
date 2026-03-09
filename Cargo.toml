@@ -1,16 +1,15 @@
 # Dvorak Typing Practice CLI App
 [package]
 name = "dvoratt"
-version = "0.1.2"
+version = "0.1.3"
 edition = "2021"
 rust-version = "1.88"
 description = "Dvorak Typing Practice Terminal App"
-readme = "README.md"
-license = "MIT"
-authors = ["graelo <graelo@graelo.cc>"]
-repository = "https://github.com/graelo/dvoratt"
-homepage = "https://github.com/graelo/dvoratt"
 documentation = "https://docs.rs/dvoratt"
+readme = "README.md"
+homepage = "https://github.com/graelo/dvoratt"
+repository = "https://github.com/graelo/dvoratt"
+license = "MIT"
 keywords = ["app", "cli", "dvorak", "practice", "terminal", "typing"]
 categories = ["terminal"]
 exclude = ["/.github"]
