@@ -36,7 +36,7 @@ impl App {
         App {
             performance: PerformanceTracker::default(),
             word_queue,
-            word_lists: word_lists.clone(),
+            word_lists,
             current_list_index: 1,
             user_input: String::new(),
         }
@@ -89,9 +89,8 @@ impl App {
         if self.user_input == self.word_queue.current_word() {
             let speed = self.calculate_word_speed();
             self.performance.update_recent_word_speeds(speed);
-            let user_input_clone = self.user_input.clone();
             self.performance
-                .update_fastest_slowest_words(&user_input_clone, speed);
+                .update_fastest_slowest_words(&self.user_input, speed);
             self.performance
                 .record_word_completed(self.word_queue.current_word().len() as u32);
 
