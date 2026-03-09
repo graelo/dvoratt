@@ -6,7 +6,7 @@ pub(crate) struct StruggleCombinations {
 }
 
 impl StruggleCombinations {
-    pub fn update(&mut self, duration: Duration, user_input: &str) {
+    pub(crate) fn update(&mut self, duration: Duration, user_input: &str) {
         let combos = self.get_letter_combinations(user_input);
         for combo in combos {
             let speed = self.calculate_combo_speed(&combo, duration);
@@ -23,13 +23,14 @@ impl StruggleCombinations {
     }
 
     fn get_letter_combinations(&self, user_input: &str) -> Vec<String> {
+        let chars: Vec<char> = user_input.chars().collect();
         let mut combos = Vec::new();
-        for i in 0..user_input.len() {
-            if i < user_input.len() - 1 {
-                combos.push(user_input[i..=i + 1].to_string());
+        for i in 0..chars.len() {
+            if i + 1 < chars.len() {
+                combos.push(chars[i..=i + 1].iter().collect());
             }
-            if user_input.len() >= 2 && i < user_input.len() - 2 {
-                combos.push(user_input[i..=i + 2].to_string());
+            if i + 2 < chars.len() {
+                combos.push(chars[i..=i + 2].iter().collect());
             }
         }
         combos
@@ -40,7 +41,7 @@ impl StruggleCombinations {
         (combo.len() as f32 / 5.0) / minutes
     }
 
-    pub fn get_combinations(&self) -> &[(String, f32)] {
+    pub(crate) fn get_combinations(&self) -> &[(String, f32)] {
         &self.combinations
     }
 }
