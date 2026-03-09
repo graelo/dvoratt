@@ -1,3 +1,6 @@
+const LEARNED_WORD_WPM_THRESHOLD: f32 = 30.0;
+const LEARNED_WORD_CORRECT_ATTEMPTS: u8 = 2;
+
 pub(crate) struct ProblemWordEntry {
     pub(crate) word: String,
     pub(crate) avg_speed: f32,
@@ -34,7 +37,7 @@ impl ProblemWords {
 
     pub(crate) fn remove_learned_words(&mut self) {
         self.words
-            .retain(|e| e.avg_speed < 30.0 || e.correct_attempts < 2);
+            .retain(|e| e.avg_speed < LEARNED_WORD_WPM_THRESHOLD || e.correct_attempts < LEARNED_WORD_CORRECT_ATTEMPTS);
     }
 
     pub(crate) fn get_words(&self) -> &[ProblemWordEntry] {

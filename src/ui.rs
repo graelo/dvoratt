@@ -208,6 +208,7 @@ fn draw_problem_words(f: &mut Frame, app: &App, area: Rect) {
     );
     f.render_widget(problem_words_list, area);
 }
+
 fn draw_struggle_combinations(f: &mut Frame, app: &App, area: Rect) {
     let struggle_combinations: Vec<ListItem> = app
         .performance

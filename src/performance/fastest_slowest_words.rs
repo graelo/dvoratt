@@ -13,7 +13,9 @@ impl FastestSlowestWords {
     }
 
     fn update_fastest_words(&mut self, word: &str, speed: f32) {
-        if self.fastest_words.len() < 10 || speed > self.fastest_words.last().unwrap().1 {
+        if self.fastest_words.len() < 10
+            || self.fastest_words.last().is_none_or(|last| speed > last.1)
+        {
             if let Some(pos) = self.fastest_words.iter().position(|(w, _)| w == word) {
                 self.fastest_words.remove(pos);
             }
@@ -25,7 +27,9 @@ impl FastestSlowestWords {
     }
 
     fn update_slowest_words(&mut self, word: &str, speed: f32) {
-        if self.slowest_words.len() < 10 || speed < self.slowest_words.last().unwrap().1 {
+        if self.slowest_words.len() < 10
+            || self.slowest_words.last().is_none_or(|last| speed < last.1)
+        {
             if let Some(pos) = self.slowest_words.iter().position(|(w, _)| w == word) {
                 self.slowest_words.remove(pos);
             }
