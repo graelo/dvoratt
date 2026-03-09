@@ -40,10 +40,7 @@ pub(crate) fn load_word_lists() -> Vec<WordList> {
 }
 
 fn load_words_from_embedded(source: &[u8]) -> Vec<String> {
-    decompress_gzip(source)
-        .lines()
-        .map(str::to_owned)
-        .collect()
+    decompress_gzip(source).lines().map(str::to_owned).collect()
 }
 
 fn decompress_gzip(compressed_data: &[u8]) -> String {
