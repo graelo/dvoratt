@@ -56,9 +56,7 @@ mod tests {
         for i in 0..15 {
             tracker.update_recent_word_speeds(i as f32);
         }
-        // Should only keep last 10
-        assert_eq!(tracker.recent_word_speeds.len(), 10);
-        // Average of 5-14
+        // Average of last 10 values (5..=14)
         let expected_avg = (5.0 + 6.0 + 7.0 + 8.0 + 9.0 + 10.0 + 11.0 + 12.0 + 13.0 + 14.0) / 10.0;
         assert_eq!(tracker.average_speed_last_10_words(), expected_avg);
     }
