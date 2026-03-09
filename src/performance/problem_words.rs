@@ -36,8 +36,10 @@ impl ProblemWords {
     }
 
     pub(crate) fn remove_learned_words(&mut self) {
-        self.words
-            .retain(|e| e.avg_speed < LEARNED_WORD_WPM_THRESHOLD || e.correct_attempts < LEARNED_WORD_CORRECT_ATTEMPTS);
+        self.words.retain(|e| {
+            e.avg_speed < LEARNED_WORD_WPM_THRESHOLD
+                || e.correct_attempts < LEARNED_WORD_CORRECT_ATTEMPTS
+        });
     }
 
     pub(crate) fn get_words(&self) -> &[ProblemWordEntry] {
