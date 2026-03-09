@@ -29,7 +29,7 @@ mod tests {
     #[test]
     fn test_new_word_speed_tracker() {
         let tracker = WordSpeedTracker::default();
-        assert!(tracker.recent_word_speeds.is_empty());
+        assert_eq!(tracker.average_speed_last_10_words(), 0.0);
     }
 
     #[test]
@@ -37,7 +37,7 @@ mod tests {
         let mut tracker = WordSpeedTracker::default();
         tracker.update_recent_word_speeds(60.0);
         tracker.update_recent_word_speeds(70.0);
-        assert_eq!(tracker.recent_word_speeds.len(), 2);
+        assert_eq!(tracker.average_speed_last_10_words(), 65.0);
     }
 
     #[test]

@@ -222,9 +222,16 @@ mod tests {
 
     #[test]
     fn test_average_speed_last_10_words() {
-        let app = App::new();
-        let speed = app.average_speed_last_10_words();
-        assert!(speed >= 0.0);
+        let mut app = App::new();
+        assert_eq!(app.average_speed_last_10_words(), 0.0);
+
+        // Type a word to generate a non-zero speed
+        let word = app.word_queue.current_word().to_string();
+        for c in word.chars() {
+            app.on_key(KeyCode::Char(c));
+        }
+        app.on_key(KeyCode::Char(' '));
+        assert!(app.average_speed_last_10_words() > 0.0);
     }
 
     #[test]
