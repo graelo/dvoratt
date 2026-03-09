@@ -73,13 +73,11 @@ impl App {
                     self.user_input.push(c);
                 }
             }
-            KeyCode::Backspace => {
-                if !self.user_input.is_empty() {
-                    self.user_input.pop();
-                    self.performance.undo_mistype_at(self.user_input.len());
-                    self.performance.record_backspace();
-                    self.add_problem_word();
-                }
+            KeyCode::Backspace if !self.user_input.is_empty() => {
+                self.user_input.pop();
+                self.performance.undo_mistype_at(self.user_input.len());
+                self.performance.record_backspace();
+                self.add_problem_word();
             }
             _ => {}
         }
