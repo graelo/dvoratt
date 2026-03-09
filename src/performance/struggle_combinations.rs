@@ -25,13 +25,12 @@ impl StruggleCombinations {
     fn get_letter_combinations(&self, user_input: &str) -> Vec<String> {
         let chars: Vec<char> = user_input.chars().collect();
         let mut combos = Vec::new();
-        for i in 0..chars.len() {
-            if i + 1 < chars.len() {
-                combos.push(chars[i..=i + 1].iter().collect());
-            }
-            if i + 2 < chars.len() {
-                combos.push(chars[i..=i + 2].iter().collect());
-            }
+        for window_size in [2, 3] {
+            combos.extend(
+                chars
+                    .windows(window_size)
+                    .map(|w| w.iter().collect::<String>()),
+            );
         }
         combos
     }

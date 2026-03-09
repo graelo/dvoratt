@@ -47,12 +47,10 @@ fn main() -> Result<()> {
     )?;
     terminal.show_cursor()?;
 
-    if let Ok(quit) = res {
-        if quit {
-            println!("{}", app.generate_final_scores());
-        }
-    } else if let Err(err) = res {
-        println!("{err:?}");
+    match res {
+        Ok(true) => println!("{}", app.generate_final_scores()),
+        Ok(false) => {}
+        Err(err) => println!("{err:?}"),
     }
 
     Ok(())

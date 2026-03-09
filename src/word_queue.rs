@@ -174,9 +174,11 @@ mod tests {
         let mut queue = WordQueue::new(words);
 
         let new_words = vec!["rust".to_string(), "test".to_string(), "code".to_string()];
-        queue.change_word_list(new_words);
+        queue.change_word_list(new_words.clone());
 
-        assert_ne!(queue.current_word(), "hello");
-        assert_ne!(queue.current_word(), "world");
+        let valid: std::collections::HashSet<&String> = new_words.iter().collect();
+        assert!(valid.contains(&queue.current_word().to_string()));
+        assert_eq!(queue.next_words().len(), 2);
+        assert!(!queue.is_current_word_problem());
     }
 }

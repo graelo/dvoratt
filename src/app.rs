@@ -15,6 +15,8 @@ use crate::word_queue::WordQueue;
 /// This struct contains all the state needed to run the typing practice application,
 /// including the current word queue, performance metrics, available word lists,
 /// and user input state.
+const DEFAULT_WORD_LIST_INDEX: usize = 1;
+
 pub(crate) struct App {
     /// Performance tracking and statistics
     pub(crate) performance: PerformanceTracker,
@@ -28,26 +30,28 @@ pub(crate) struct App {
     pub(crate) user_input: String,
 }
 
+impl Default for App {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl App {
     /// Create a new `App` instance with default settings.
     pub(crate) fn new() -> Self {
         let word_lists = load_word_lists();
-        let word_queue = WordQueue::new(word_lists[1].words.clone());
+        let word_queue = WordQueue::new(word_lists[DEFAULT_WORD_LIST_INDEX].words.clone());
         App {
             performance: PerformanceTracker::default(),
             word_queue,
             word_lists,
-            current_list_index: 1,
+            current_list_index: DEFAULT_WORD_LIST_INDEX,
             user_input: String::new(),
         }
     }
 
     pub(crate) fn on_key(&mut self, key: KeyCode) {
         let current_time = Instant::now();
-
-        if key != KeyCode::Backspace {
-            self.performance.start_word_if_needed(current_time);
-        }
 
         if let Some(last_time) = self.performance.last_keypress_time() {
             let duration = current_time.duration_since(last_time);
@@ -59,6 +63,7 @@ impl App {
 
         match key {
             KeyCode::Char(c) => {
+                self.performance.start_word_if_needed(current_time);
                 if c == ' ' {
                     self.on_word_completed();
                 } else {
@@ -165,7 +170,7 @@ mod tests {
     fn test_app_new() {
         let app = App::new();
         assert!(!app.word_lists.is_empty());
-        assert_eq!(app.current_list_index, 1);
+        assert_eq!(app.current_list_index, DEFAULT_WORD_LIST_INDEX);
         assert!(app.user_input.is_empty());
         assert!(!app.word_queue.current_word().is_empty());
     }
@@ -222,9 +227,16 @@ mod tests {
 
     #[test]
     fn test_average_speed_last_10_words() {
-        let app = App::new();
-        let speed = app.average_speed_last_10_words();
-        assert!(speed >= 0.0);
+        let mut app = App::new();
+        assert_eq!(app.average_speed_last_10_words(), 0.0);
+
+        // Type a word to generate a non-zero speed
+        let word = app.word_queue.current_word().to_string();
+        for c in word.chars() {
+            app.on_key(KeyCode::Char(c));
+        }
+        app.on_key(KeyCode::Char(' '));
+        assert!(app.average_speed_last_10_words() > 0.0);
     }
 
     #[test]
