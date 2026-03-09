@@ -106,6 +106,10 @@ impl WordQueue {
         self.all_words = new_words;
         self.all_words.shuffle(&mut rng());
 
+        self.problem_word_queue.clear();
+        self.is_repeating_problem_word = false;
+        self.problem_word_repetitions = 0;
+
         self.next_words.clear();
         self.next_words = self
             .all_words

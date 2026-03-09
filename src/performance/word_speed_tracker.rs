@@ -6,14 +6,14 @@ pub(crate) struct WordSpeedTracker {
 }
 
 impl WordSpeedTracker {
-    pub fn update_recent_word_speeds(&mut self, speed: f32) {
+    pub(crate) fn update_recent_word_speeds(&mut self, speed: f32) {
         self.recent_word_speeds.push_back(speed);
         if self.recent_word_speeds.len() > 10 {
             self.recent_word_speeds.pop_front();
         }
     }
 
-    pub fn average_speed_last_10_words(&self) -> f32 {
+    pub(crate) fn average_speed_last_10_words(&self) -> f32 {
         if self.recent_word_speeds.is_empty() {
             0.0
         } else {

@@ -8,7 +8,7 @@ use ratatui::{
 
 use crate::app::App;
 
-pub fn draw(f: &mut Frame, app: &App) {
+pub(crate) fn draw(f: &mut Frame, app: &App) {
     let chunks = Layout::default()
         .direction(Direction::Vertical)
         .margin(1)

@@ -7,7 +7,7 @@ pub(crate) struct FastestSlowestWords {
 }
 
 impl FastestSlowestWords {
-    pub fn update(&mut self, word: &str, speed: f32) {
+    pub(crate) fn update(&mut self, word: &str, speed: f32) {
         self.update_fastest_words(word, speed);
         self.update_slowest_words(word, speed);
     }
@@ -36,11 +36,11 @@ impl FastestSlowestWords {
         }
     }
 
-    pub fn get_fastest_words(&self) -> &[(String, f32)] {
+    pub(crate) fn get_fastest_words(&self) -> &[(String, f32)] {
         &self.fastest_words
     }
 
-    pub fn get_slowest_words(&self) -> &[(String, f32)] {
+    pub(crate) fn get_slowest_words(&self) -> &[(String, f32)] {
         &self.slowest_words
     }
 }

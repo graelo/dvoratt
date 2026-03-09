@@ -86,7 +86,7 @@ where
 
         let timeout = tick_rate
             .checked_sub(last_tick.elapsed())
-            .unwrap_or_else(|| Duration::from_secs(0));
+            .unwrap_or(Duration::ZERO);
 
         if crossterm::event::poll(timeout)? {
             if let Event::Key(key) = event::read()? {
