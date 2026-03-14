@@ -1,5 +1,15 @@
+//! Detection and tracking of struggle combinations.
+//!
+//! This module identifies letter combinations (2-3 characters) that users type slowly,
+//! helping to pinpoint specific finger movements or key sequences that are difficult.
+
 use std::time::Duration;
 
+/// Tracks letter combinations that users struggle with during typing.
+///
+/// Identifies 2-character and 3-character sequences that take longer than average
+/// to type, sorted by speed (slowest first). Useful for identifying specific
+/// finger movements or key transitions that are difficult.
 #[derive(Default)]
 pub(crate) struct StruggleCombinations {
     combinations: Vec<(String, f32)>,

@@ -1,7 +1,23 @@
+//! Management of the word queue for typing practice.
+//!
+//! This module handles the ordering and selection of words to type, including:
+//! - Problem word repetition for extra practice
+//! - Cycling through word lists
+//! - Maintaining a buffer of upcoming words
+//! - Random shuffling of words between cycles
+
 use rand::rng;
 use rand::seq::SliceRandom;
 use std::collections::VecDeque;
 
+/// Manages the queue of words to type during practice sessions.
+///
+/// Handles:
+/// - Current word display
+/// - Next words preview
+/// - Problem word repetition (words repeated up to 3 times)
+/// - Word list cycling and shuffling
+/// - Switching between different difficulty levels
 pub(crate) struct WordQueue {
     problem_word_queue: VecDeque<(String, u8)>,
     original_words: Vec<String>,

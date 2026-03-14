@@ -1,3 +1,15 @@
+//! User interface rendering for the Dvorak typing practice application.
+//!
+//! This module contains functions for drawing the terminal UI, including:
+//! - Word list tabs for navigation
+//! - Typing area with current and next words
+//! - Performance statistics display
+//! - Problem word tracking
+//! - Struggle combination visualization
+//!
+//! The UI is built using ratatui (formerly tui-rs) and provides a clean,
+//! organized interface for the typing practice session.
+
 use ratatui::{
     layout::{Constraint, Direction, Layout, Rect},
     style::{Color, Modifier, Style},
