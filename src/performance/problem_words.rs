@@ -1,6 +1,22 @@
+//! Tracking and management of problem words during typing practice.
+//!
+//! This module identifies words that users struggle with and manages their practice
+//! through repetition until they are mastered. Words are considered "learned" when
+//! they meet both speed and accuracy thresholds.
+
+/// Threshold for considering a word "learned" based on typing speed (WPM).
 const LEARNED_WORD_WPM_THRESHOLD: f32 = 30.0;
+
+/// Number of correct attempts required to consider a word "learned".
 const LEARNED_WORD_CORRECT_ATTEMPTS: u8 = 2;
 
+/// Entry representing a problem word with performance statistics.
+///
+/// Contains:
+/// - The word itself
+/// - Average typing speed in WPM
+/// - Number of backspaces used when typing this word
+/// - Count of correct attempts
 pub(crate) struct ProblemWordEntry {
     pub(crate) word: String,
     pub(crate) avg_speed: f32,
