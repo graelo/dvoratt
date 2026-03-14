@@ -1,7 +1,17 @@
+//! Tracking for word typing speeds.
+//!
+//! This module maintains a rolling window of the most recent word typing speeds
+//! to calculate average typing speed and provide real-time feedback to users.
+
 use std::collections::VecDeque;
 
+/// Tracker for recent word typing speeds.
+///
+/// Maintains a sliding window of the 10 most recently typed words with their
+/// typing speeds in WPM. Used to calculate current average typing speed.
 #[derive(Default)]
 pub(crate) struct WordSpeedTracker {
+    /// Queue of recent word speeds (limited to 10 entries)
     recent_word_speeds: VecDeque<f32>,
 }
 

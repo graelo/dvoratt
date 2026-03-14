@@ -1,15 +1,37 @@
+//! Problem word tracking for typing practice.
+//!
+//! This module identifies and manages words that users struggle with during typing
+//! practice sessions. Problem words are determined based on slow typing speed and
+//! frequent backspace usage.
+
+/// Threshold for considering a word "learned" (in WPM)
 const LEARNED_WORD_WPM_THRESHOLD: f32 = 30.0;
+
+/// Number of correct attempts required to consider a word "learned"
 const LEARNED_WORD_CORRECT_ATTEMPTS: u8 = 2;
 
+/// Entry representing a problem word with performance statistics.
+///
+/// Contains information about a word that has been identified as problematic,
+/// including average typing speed, backspace usage, and correct attempt count.
 pub(crate) struct ProblemWordEntry {
+    /// The word itself
     pub(crate) word: String,
+    /// Average typing speed in words per minute (WPM)
     pub(crate) avg_speed: f32,
+    /// Number of backspaces used when typing this word
     pub(crate) backspaces: u32,
+    /// Number of times the word was typed correctly
     pub(crate) correct_attempts: u8,
 }
 
+/// Manager for tracking problem words during a typing session.
+///
+/// This struct maintains a list of problematic words and provides methods to
+/// add new problems, update statistics, and remove learned words.
 #[derive(Default)]
 pub(crate) struct ProblemWords {
+    /// List of problem word entries
     words: Vec<ProblemWordEntry>,
 }
 

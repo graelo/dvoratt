@@ -1,3 +1,9 @@
+//! User interface rendering for the Dvorak typing practice application.
+//!
+//! This module contains functions for drawing the terminal UI using ratatui.
+//! It handles the layout of different components including word lists, typing area,
+//! and performance statistics.
+
 use ratatui::{
     layout::{Constraint, Direction, Layout, Rect},
     style::{Color, Modifier, Style},
@@ -8,6 +14,18 @@ use ratatui::{
 
 use crate::app::App;
 
+/// Draw the complete application UI.
+///
+/// This function divides the terminal into sections and delegates rendering to
+/// specialized functions for each section:
+/// - Word list tabs at the top
+/// - Typing area in the middle (current word, next word, user input)
+/// - Performance statistics at the bottom
+///
+/// # Arguments
+///
+/// * `f` - The ratatui Frame to draw on
+/// * `app` - The application state containing all data to display
 pub(crate) fn draw(f: &mut Frame, app: &App) {
     let chunks = Layout::default()
         .direction(Direction::Vertical)
@@ -28,6 +46,17 @@ pub(crate) fn draw(f: &mut Frame, app: &App) {
     draw_stats(f, app, chunks[3]);
 }
 
+/// Draw the word list tabs at the top of the UI.
+///
+/// This function creates a tabbed interface showing all available word lists,
+/// highlighting the currently selected one. Users can navigate between lists
+/// using Tab and Shift+Tab keys.
+///
+/// # Arguments
+///
+/// * `f` - The ratatui Frame to draw on
+/// * `app` - The application state containing word lists and current selection
+/// * `area` - The rectangular area where tabs should be drawn
 fn draw_word_list_tabs(f: &mut Frame, app: &App, area: Rect) {
     let list_names: Vec<String> = app
         .word_lists
@@ -43,6 +72,20 @@ fn draw_word_list_tabs(f: &mut Frame, app: &App, area: Rect) {
     f.render_widget(tabs, area);
 }
 
+/// Generate styled spans for user input with mistyped characters highlighted.
+///
+/// This function creates a vector of styled spans where correctly typed characters
+/// are displayed normally and mistyped characters are shown in bold red. This provides
+/// immediate visual feedback to the user about typing errors.
+///
+/// # Arguments
+///
+/// * `input` - The user's current input string
+/// * `mistyped_chars` - Slice of character positions that were mistyped
+///
+/// # Returns
+///
+/// A vector of styled spans for rendering in the UI
 fn generate_styled_input<'a>(input: &'a str, mistyped_chars: &'a [usize]) -> Vec<Span<'a>> {
     input
         .char_indices()
@@ -59,6 +102,22 @@ fn generate_styled_input<'a>(input: &'a str, mistyped_chars: &'a [usize]) -> Vec
         .collect()
 }
 
+/// Draw the typing area showing the current word to type and user input.
+///
+/// This function renders three components:
+/// - Current word (highlighted in yellow)
+/// - Next word (dimmed for preview)
+/// - User's typed input (with mistyped characters in red)
+/// - Average typing speed for the last 10 words
+///
+/// Problem words are shown with a yellow background and repetition count.
+///
+/// # Arguments
+///
+/// * `f` - The ratatui Frame to draw on
+/// * `app` - The application state containing current word, user input, and performance data
+/// * `current_chunk` - The area for displaying words to type
+/// * `input_chunk` - The area for displaying user input
 fn draw_typing_area(f: &mut Frame, app: &App, current_chunk: Rect, input_chunk: Rect) {
     let typing_area = Layout::default()
         .direction(Direction::Horizontal)
@@ -123,6 +182,21 @@ fn draw_typing_area(f: &mut Frame, app: &App, current_chunk: Rect, input_chunk: 
     f.render_widget(user_input, input_chunk);
 }
 
+/// Draw the performance statistics section at the bottom of the UI.
+///
+/// This function divides the area into four sections:
+/// - Problem words (left)
+/// - Struggle combinations (center-left)
+/// - Slowest words (center-right, top half)
+/// - Fastest words (center-right, bottom half)
+///
+/// Each section displays up to 10 items from the respective performance tracking data.
+///
+/// # Arguments
+///
+/// * `f` - The ratatui Frame to draw on
+/// * `app` - The application state containing performance data
+/// * `area` - The rectangular area where statistics should be drawn
 fn draw_stats(f: &mut Frame, app: &App, area: Rect) {
     let chunks = Layout::default()
         .direction(Direction::Horizontal)
@@ -145,6 +219,16 @@ fn draw_stats(f: &mut Frame, app: &App, area: Rect) {
     draw_fastest_words(f, app, speed_chunks[1]);
 }
 
+/// Draw the fastest words section.
+///
+/// This function displays up to 10 words that were typed the fastest during the session,
+/// along with their typing speed in WPM. Helps users identify words they handle well.
+///
+/// # Arguments
+///
+/// * `f` - The ratatui Frame to draw on
+/// * `app` - The application state containing performance data
+/// * `area` - The rectangular area where the list should be drawn
 fn draw_fastest_words(f: &mut Frame, app: &App, area: Rect) {
     let fastest_words: Vec<ListItem> = app
         .performance
@@ -166,6 +250,17 @@ fn draw_fastest_words(f: &mut Frame, app: &App, area: Rect) {
     f.render_widget(fastest_words_list, area);
 }
 
+/// Draw the slowest words section.
+///
+/// This function displays up to 10 words that were typed the slowest during the session,
+/// along with their typing speed in WPM. Helps users identify words they struggle with
+/// and may need more practice on.
+///
+/// # Arguments
+///
+/// * `f` - The ratatui Frame to draw on
+/// * `app` - The application state containing performance data
+/// * `area` - The rectangular area where the list should be drawn
 fn draw_slowest_words(f: &mut Frame, app: &App, area: Rect) {
     let slowest_words: Vec<ListItem> = app
         .performance
@@ -187,6 +282,22 @@ fn draw_slowest_words(f: &mut Frame, app: &App, area: Rect) {
     f.render_widget(slowest_words_list, area);
 }
 
+/// Draw the problem words section.
+///
+/// This function displays up to 10 words that have been identified as problematic
+/// based on typing errors, backspace usage, and slow typing speed. Each entry shows:
+/// - The word itself
+/// - Average typing speed in WPM
+/// - Number of backspaces used
+/// - Number of correct attempts
+///
+/// Problem words are automatically repeated during practice sessions to help users master them.
+///
+/// # Arguments
+///
+/// * `f` - The ratatui Frame to draw on
+/// * `app` - The application state containing performance data
+/// * `area` - The rectangular area where the list should be drawn
 fn draw_problem_words(f: &mut Frame, app: &App, area: Rect) {
     let problem_words: Vec<ListItem> = app
         .performance
@@ -209,6 +320,17 @@ fn draw_problem_words(f: &mut Frame, app: &App, area: Rect) {
     f.render_widget(problem_words_list, area);
 }
 
+/// Draw the struggle combinations section.
+///
+/// This function displays up to 20 character combinations that cause slowdowns in typing.
+/// Each entry shows the combination and its average typing speed. Helps users identify
+/// specific finger movements or key sequences they need to practice.
+///
+/// # Arguments
+///
+/// * `f` - The ratatui Frame to draw on
+/// * `app` - The application state containing performance data
+/// * `area` - The rectangular area where the list should be drawn
 fn draw_struggle_combinations(f: &mut Frame, app: &App, area: Rect) {
     let struggle_combinations: Vec<ListItem> = app
         .performance

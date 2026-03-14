@@ -1,7 +1,20 @@
+//! Tracking for character combinations that cause typing struggles.
+//!
+//! This module identifies and tracks character combinations (2-3 letters) that
+//! users type slowly or with hesitation. Helps pinpoint specific finger movements
+//! or key sequences that need practice.
+
 use std::time::Duration;
 
+/// Manager for tracking character combinations that cause typing struggles.
+///
+/// This struct analyzes user input to identify combinations of 2-3 characters
+/// that are typed slowly, helping users understand which specific patterns
+/// they need to practice.
 #[derive(Default)]
 pub(crate) struct StruggleCombinations {
+    /// List of character combinations with their average typing speeds
+    /// Limited to the 50 slowest combinations
     combinations: Vec<(String, f32)>,
 }
 

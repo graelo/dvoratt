@@ -1,8 +1,22 @@
+//! Tracking for fastest and slowest typed words.
+//!
+//! This module maintains lists of the fastest and slowest typed words during a
+//! typing practice session. It helps users identify their strengths and areas
+//! that need improvement.
+
 use std::cmp::Ordering;
 
+/// Manager for tracking the fastest and slowest typed words.
+///
+/// This struct maintains two separate lists:
+/// - Fastest 10 words (sorted by highest WPM)
+/// - Slowest 10 words (sorted by lowest WPM)
 #[derive(Default)]
 pub(crate) struct FastestSlowestWords {
+    /// List of fastest typed words with their speeds, limited to 10 entries
     fastest_words: Vec<(String, f32)>,
+
+    /// List of slowest typed words with their speeds, limited to 10 entries
     slowest_words: Vec<(String, f32)>,
 }
 
