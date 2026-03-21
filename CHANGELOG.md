@@ -8,7 +8,7 @@ and this project adheres to
 
 ## [Unreleased]
 
-## [v0.1.3] - 2024-XX-XX
+## [v0.1.3] - 2026-03-09
 
 ### Fixed
 
@@ -20,13 +20,13 @@ and this project adheres to
 - Code formatting improvements
 - Test fixes for private field access and non-deterministic tests
 
-## [v0.1.2] - 2024-XX-XX
+## [v0.1.2] - 2026-02-12
 
 ### Fixed
 
 - Collapsed nested if statements into match arm guards for better code clarity
 
-## [v0.1.1] - 2024-XX-XX
+## [v0.1.1] - 2025-11-24
 
 ### Improved
 
@@ -36,7 +36,7 @@ and this project adheres to
 
 - Resolved void tests and non-deterministic test issues
 
-## [v0.1.0] - 2024-XX-XX
+## [v0.1.0] - 2025-02-05
 
 ### Added
 
