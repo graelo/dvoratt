@@ -1,3 +1,9 @@
+//! Word lists for different difficulty levels in the typing practice.
+//!
+//! This module provides access to compressed word lists organized by Dvorak keyboard
+//! learning progression. Each level introduces additional keys, building from home row
+//! to full alphabet mastery.
+
 use std::io;
 
 use flate2::read::GzDecoder;
@@ -8,6 +14,11 @@ const LEVEL3_GZIP: &[u8] = include_bytes!("../lessons/level3.txt.gz");
 const LEVEL4_GZIP: &[u8] = include_bytes!("../lessons/level4.txt.gz");
 const LEVEL5_GZIP: &[u8] = include_bytes!("../lessons/level5.txt.gz");
 
+/// A collection of words for typing practice at a specific difficulty level.
+///
+/// Contains:
+/// - `name`: Descriptive name of the word list (e.g., "Home Row - 8 keys")
+/// - `words`: Vector of words to practice
 #[derive(Debug, Clone)]
 pub(crate) struct WordList {
     pub(crate) name: String,

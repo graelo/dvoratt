@@ -1,9 +1,25 @@
+//! Central performance tracking for the typing practice application.
+//!
+//! The `PerformanceTracker` aggregates all performance metrics during a typing session,
+//! including word speed, accuracy, problem words, and struggle combinations. It provides
+//! methods to update these metrics as the user types and generates final statistics at
+//! the end of a session.
+
 use super::fastest_slowest_words::FastestSlowestWords;
 use super::problem_words::{ProblemWordEntry, ProblemWords};
 use super::struggle_combinations::StruggleCombinations;
 use super::word_speed_tracker::WordSpeedTracker;
 use std::time::{Duration, Instant};
 
+/// Tracks all performance metrics during a typing session.
+///
+/// This struct maintains state for:
+/// - Word speed tracking (WPM calculation)
+/// - Mistyped character positions
+/// - Backspace usage
+/// - Problem word identification
+/// - Struggle combinations (slow key sequences)
+/// - Fastest and slowest words
 pub(crate) struct PerformanceTracker {
     word_speed_tracker: WordSpeedTracker,
     fastest_slowest_words: FastestSlowestWords,
