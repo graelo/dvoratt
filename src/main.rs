@@ -2,9 +2,9 @@ use anyhow::Result;
 use crossterm::{
     event::{self, DisableMouseCapture, EnableMouseCapture, Event, KeyCode, KeyModifiers},
     execute,
-    terminal::{disable_raw_mode, enable_raw_mode, EnterAlternateScreen, LeaveAlternateScreen},
+    terminal::{EnterAlternateScreen, LeaveAlternateScreen, disable_raw_mode, enable_raw_mode},
 };
-use ratatui::{backend::CrosstermBackend, Terminal};
+use ratatui::{Terminal, backend::CrosstermBackend};
 use std::time::{Duration, Instant};
 
 mod app;
@@ -86,23 +86,23 @@ where
             .checked_sub(last_tick.elapsed())
             .unwrap_or(Duration::ZERO);
 
-        if crossterm::event::poll(timeout)? {
-            if let Event::Key(key) = event::read()? {
-                match key.code {
-                    KeyCode::Char('c') if key.modifiers.contains(KeyModifiers::CONTROL) => {
-                        return Ok(true)
-                    }
-                    KeyCode::Tab => {
-                        let next_index = (app.current_list_index + 1) % app.word_lists.len();
-                        app.change_word_list(next_index);
-                    }
-                    KeyCode::BackTab => {
-                        let next_index = (app.current_list_index + app.word_lists.len() - 1)
-                            % app.word_lists.len();
-                        app.change_word_list(next_index);
-                    }
-                    _ => app.on_key(key.code),
+        if crossterm::event::poll(timeout)?
+            && let Event::Key(key) = event::read()?
+        {
+            match key.code {
+                KeyCode::Char('c') if key.modifiers.contains(KeyModifiers::CONTROL) => {
+                    return Ok(true);
                 }
+                KeyCode::Tab => {
+                    let next_index = (app.current_list_index + 1) % app.word_lists.len();
+                    app.change_word_list(next_index);
+                }
+                KeyCode::BackTab => {
+                    let next_index =
+                        (app.current_list_index + app.word_lists.len() - 1) % app.word_lists.len();
+                    app.change_word_list(next_index);
+                }
+                _ => app.on_key(key.code),
             }
         }
 

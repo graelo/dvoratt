@@ -7,7 +7,7 @@ use crossterm::event::KeyCode;
 use std::time::Instant;
 
 use crate::performance::PerformanceTracker;
-use crate::word_lists::{load_word_lists, WordList};
+use crate::word_lists::{WordList, load_word_lists};
 use crate::word_queue::WordQueue;
 
 /// The main application state.
