@@ -22,7 +22,7 @@ accuracy by providing interactive practice sessions with performance tracking.
 
 ### Prerequisites
 
-- Rust (1.60 or later)
+- Rust (1.95 or later)
 - A terminal that supports ANSI escape codes
 
 ### Building from Source

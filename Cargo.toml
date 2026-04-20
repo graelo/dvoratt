@@ -2,8 +2,8 @@
 [package]
 name = "dvoratt"
 version = "0.1.4"
-edition = "2021"
-rust-version = "1.88"
+edition = "2024"
+rust-version = "1.95"
 description = "Dvorak Typing Practice Terminal App"
 documentation = "https://docs.rs/dvoratt"
 readme = "README.md"

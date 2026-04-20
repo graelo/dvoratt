@@ -84,10 +84,10 @@ impl PerformanceTracker {
     }
 
     pub(crate) fn undo_mistype_at(&mut self, pos: usize) {
-        if let Some(&last) = self.mistyped_chars.last() {
-            if last == pos {
-                self.mistyped_chars.pop();
-            }
+        if let Some(&last) = self.mistyped_chars.last()
+            && last == pos
+        {
+            self.mistyped_chars.pop();
         }
     }
 
