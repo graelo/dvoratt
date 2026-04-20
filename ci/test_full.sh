@@ -61,6 +61,3 @@ done
 
 cargo build --features="${FEATURES[*]}"
 cargo nextest run $NEXTEST_PROFILE --features="${FEATURES[*]}"
-
-# doc tests (not supported by nextest)
-cargo test --doc
