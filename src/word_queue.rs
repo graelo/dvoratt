@@ -42,10 +42,9 @@ impl WordQueue {
         let mut all_words = initial_words;
         all_words.shuffle(&mut rng());
         let current_word = all_words.pop().unwrap_or_default();
-        let next_words = vec![
-            all_words.pop().unwrap_or_default(),
-            all_words.pop().unwrap_or_default(),
-        ];
+        let next_words: Vec<String> = (0..2)
+            .map(|_| all_words.pop().unwrap_or_default())
+            .collect();
 
         WordQueue {
             problem_word_queue: VecDeque::new(),
