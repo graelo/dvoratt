@@ -1,16 +1,20 @@
 # Test pre-releases on a larger scope (platforms & versions) to avoid bad surprises.
+#
+# Local:
+#   act push -W .github/workflows/ci-compatibility-matrix.yml -j test-versions
+#   act push -W .github/workflows/ci-compatibility-matrix.yml -j test-other-platforms
 
-name: 'CI: Compatibility matrix'
+name: 'CI: Compatibility Matrix'
 on:
   push:
     branches:
       - 'compat/*'
 
+permissions: {}
+
 concurrency:
   group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
   cancel-in-progress: true
-
-permissions: {}
 
 jobs:
   test-versions:
@@ -20,8 +24,7 @@ jobs:
       contents: read
     strategy:
       matrix:
-        rust: [1.95.0, beta, nightly]
-
+        rust: ['1.95.0', beta, nightly]
     steps:
       - name: Install Rust
         uses: dtolnay/rust-toolchain@3c5f7ea28cd621ae0bf5283f0e981fb97b8a7af9 # master
@@ -70,7 +73,7 @@ jobs:
 
   test-other-platforms:
     name: ${{ matrix.os }} (stable)
-    runs-on: '${{ matrix.os }}'
+    runs-on: ${{ matrix.os }}
     permissions:
       contents: read
     strategy:
@@ -78,19 +81,15 @@ jobs:
         include:
           - os: macos-15-intel
             target: x86_64-apple-darwin
-            type: unix
             toolchain: stable
           - os: ubuntu-24.04-arm
             target: aarch64-unknown-linux-gnu
-            type: unix
             toolchain: stable
           - os: macos-latest
             target: aarch64-apple-darwin
-            type: unix
             toolchain: stable
           - os: windows-latest
             target: x86_64-pc-windows-msvc
-            type: windows
             toolchain: stable
     steps:
       - name: Install Rust

@@ -1,5 +1,8 @@
 # Runs Renovate to check for dependency updates.
 # Triggers weekly at 19:00 UTC, or manually via workflow_dispatch.
+#
+# Local:
+#   act workflow_dispatch -W .github/workflows/schedule-renovate.yml
 
 name: 'Schedule: Renovate'
 
@@ -8,15 +11,15 @@ on:
   schedule:
     - cron: '0 19 * * 5' # Fridays at 19:00 UTC
 
+permissions: {}
+
 concurrency:
   group: ${{ github.workflow }}
   cancel-in-progress: false
 
-permissions: {}
-
 jobs:
   renovate:
-    name: Renovate
+    name: Run Renovate
     runs-on: ubuntu-latest
     environment: renovate
     permissions:
@@ -36,7 +39,7 @@ jobs:
         with:
           persist-credentials: false
 
-      - name: Run renovate
+      - name: Run Renovate
         uses: renovatebot/github-action@f66d8679fcfcfa051abde6e7a623007173bf5164 # v46.1.12
         env:
           RENOVATE_REPOSITORIES: ${{ github.repository }}

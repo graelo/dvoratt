@@ -1,19 +1,25 @@
+# Tag-triggered release: build multi-platform binaries and publish.
+#
+# Local:
+#   act push -W .github/workflows/release.yml -j prepare-artifacts
+#   act push -W .github/workflows/release.yml -j release
+
 name: Release
 on:
   push:
     tags:
       - 'v[0-9]+.[0-9]+.[0-9]+*'
 
+permissions: {}
+
 concurrency:
   group: ${{ github.workflow }}-${{ github.run_id }}
   cancel-in-progress: false
 
-permissions: {}
-
 jobs:
   prepare-artifacts:
     name: Build artifacts
-    runs-on: '${{ matrix.os }}'
+    runs-on: ${{ matrix.os }}
     permissions:
       contents: read
     strategy:
