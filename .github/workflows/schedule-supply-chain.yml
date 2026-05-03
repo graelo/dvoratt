@@ -1,6 +1,6 @@
 # Scheduled supply chain audits: dependency vulnerabilities and CI security.
 
-name: Supply Chain Audit
+name: 'Schedule: Supply chain'
 
 on:
   workflow_dispatch:

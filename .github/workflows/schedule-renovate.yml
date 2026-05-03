@@ -1,7 +1,7 @@
 # Runs Renovate to check for dependency updates.
 # Triggers weekly at 19:00 UTC, or manually via workflow_dispatch.
 
-name: Renovate
+name: 'Schedule: Renovate'
 
 on:
   workflow_dispatch:
@@ -32,7 +32,7 @@ jobs:
         with:
           persist-credentials: false
 
-      - name: Run Renovate
+      - name: Run renovate
         uses: renovatebot/github-action@f66d8679fcfcfa051abde6e7a623007173bf5164 # v46.1.12
         env:
           RENOVATE_REPOSITORIES: ${{ github.repository }}
