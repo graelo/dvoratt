@@ -4,7 +4,7 @@ name: 'CI: Compatibility matrix'
 on:
   push:
     branches:
-      - staging
+      - 'compat/*'
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
