@@ -110,7 +110,7 @@ jobs:
     if: needs.changes.outputs.cargo_lock == 'true'
     permissions:
       contents: read
-    uses: ./.github/workflows/cargo-audit.yml
+    uses: ./.github/workflows/_cargo-audit.yml
 
   ci-security:
     needs: changes
@@ -119,4 +119,4 @@ jobs:
       security-events: write
       contents: read
       actions: read
-    uses: ./.github/workflows/ci-security.yml
+    uses: ./.github/workflows/_ci-security.yml
