@@ -8,6 +8,10 @@ on:
     - cron: '0 16 * * 2' # Tuesday at 16:00 UTC
     - cron: '0 16 * * 5' # Friday at 16:00 UTC
 
+concurrency:
+  group: ${{ github.workflow }}
+  cancel-in-progress: false
+
 permissions: {}
 
 jobs:
