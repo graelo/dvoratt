@@ -191,7 +191,8 @@ jobs:
         run: |
           echo "tag-name=${GITHUB_REF#refs/tags/}" >> "${GITHUB_OUTPUT}"
 
-      - uses: mislav/bump-homebrew-formula-action@ccf2332299a883f6af50a1d2d41e5df7904dd769 # v4.1
+      - name: Bump Homebrew formula
+        uses: mislav/bump-homebrew-formula-action@ccf2332299a883f6af50a1d2d41e5df7904dd769 # v4.1
         if: '!contains(github.ref, ''-'')' # skip prereleases
         with:
           formula-name: dvoratt
