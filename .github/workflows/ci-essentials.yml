@@ -38,7 +38,6 @@ jobs:
         with:
           ref: ${{ github.event.pull_request.head.sha }}
           fetch-depth: 0
-          # fetch-depth: ${{ github.event.pull_request.commits }}
           persist-credentials: false
 
       - name: Cache crates
@@ -60,7 +59,7 @@ jobs:
 
       - name: Quality – cargo clippy
         run: |
-          cargo clippy --all-targets --all-features -- -D warnings
+          cargo clippy --locked --all-targets --all-features -- -D warnings
 
       - name: Quality – convco check
         run: |
@@ -74,10 +73,10 @@ jobs:
           rm convco
 
       - name: Build (dev)
-        run: cargo build --all-features
+        run: cargo build --locked --all-features
 
       - name: Build (release)
-        run: cargo build --all-features --release
+        run: cargo build --locked --all-features --release
 
       - name: Install cargo-nextest
         uses: taiki-e/install-action@7769b73c2ec98c38dfcf2e18c83cfd4880c038c1 # v2.75.27
