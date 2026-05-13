@@ -1,5 +1,10 @@
 # Dvorak Typing Practice in the Terminal
 
+[![release](https://img.shields.io/github/v/release/graelo/dvoratt)](https://github.com/graelo/dvoratt/releases/latest)
+[![build status](https://github.com/graelo/dvoratt/actions/workflows/ci-essentials.yml/badge.svg)](https://github.com/graelo/dvoratt/actions/workflows/ci-essentials.yml)
+[![rust 2024 edition](https://img.shields.io/badge/edition-2024-blue.svg)](https://doc.rust-lang.org/edition-guide/rust-2024/index.html)
+[![license](https://img.shields.io/github/license/graelo/dvoratt)](LICENSE)
+
 A terminal-based typing practice application designed specifically for the
 Dvorak keyboard layout. This tool helps users improve their typing speed and
 accuracy by providing interactive practice sessions with performance tracking.
@@ -131,5 +136,17 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
-for details.
+Licensed under either of
+
+- Apache License, Version 2.0 ([LICENSE-APACHE](LICENSE-APACHE) or
+  <https://www.apache.org/licenses/LICENSE-2.0>)
+- MIT license ([LICENSE-MIT](LICENSE-MIT) or
+  <https://opensource.org/licenses/MIT>)
+
+at your option.
+
+### Contribution
+
+Unless you explicitly state otherwise, any contribution intentionally submitted
+for inclusion in the work by you, as defined in the Apache-2.0 license, shall
+be dual licensed as above, without any additional terms or conditions.

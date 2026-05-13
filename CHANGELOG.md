@@ -8,6 +8,29 @@ and this project adheres to
 
 ## [Unreleased]
 
+## [v0.1.6] - 2026-05-14
+
+### Changed
+
+- Relicense from MIT to dual MIT OR Apache-2.0; add `LICENSE-APACHE` alongside
+  the renamed `LICENSE-MIT`
+- Rename workflows to playbook prefix scheme and align workflow/job/step
+  names with the playbook
+- Harmonize workflow style with the gcode-language-server reference and apply
+  playbook conventions/hardening
+- Trigger compatibility matrix on `compat/*` branches
+- Drop doc-test step from `test_full.sh`
+- Tune Renovate: run on Fridays only, set `minimumReleaseAge` to 3 days, and
+  enable platform automerge
+- Use idiomatic iterator patterns in `word_queue`
+- Bump pinned GitHub Actions (taiki-e/install-action, renovatebot/github-action)
+  via Renovate
+
+### Added
+
+- Concurrency groups per workflow type
+- `.convco` configuration for release changelog section grouping
+
 ## [v0.1.5] - 2026-04-20
 
 ### Security
