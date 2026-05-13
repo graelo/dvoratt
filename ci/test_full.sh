@@ -56,8 +56,9 @@ done
 cargo build --locked --features="${FEATURES[*]}"
 cargo nextest run --locked $NEXTEST_PROFILE --features="${FEATURES[*]}"
 
-# doc tests (not supported by nextest)
-cargo test --locked --doc
+# Doc tests intentionally omitted: dvoratt is a binary-only crate (no
+# src/lib.rs), so `cargo test --doc` errors with "no library targets found".
+# Re-enable once a library target exists.
 
 # CLI smoke test intentionally omitted: dvoratt is a TUI-only binary with no
 # argument parser, so `--help` would launch the alternate-screen UI rather than
