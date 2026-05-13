@@ -3,7 +3,7 @@
 [![release](https://img.shields.io/github/v/release/graelo/dvoratt)](https://github.com/graelo/dvoratt/releases/latest)
 [![build status](https://github.com/graelo/dvoratt/actions/workflows/ci-essentials.yml/badge.svg)](https://github.com/graelo/dvoratt/actions/workflows/ci-essentials.yml)
 [![rust 2024 edition](https://img.shields.io/badge/edition-2024-blue.svg)](https://doc.rust-lang.org/edition-guide/rust-2024/index.html)
-[![license](https://img.shields.io/github/license/graelo/dvoratt)](LICENSE)
+[![license](https://img.shields.io/badge/license-MIT_OR_Apache--2.0-blue.svg)](#license)
 
 A terminal-based typing practice application designed specifically for the
 Dvorak keyboard layout. This tool helps users improve their typing speed and
