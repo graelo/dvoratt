@@ -74,7 +74,7 @@ jobs:
           TARGET: ${{ matrix.target }}
         run: cargo build --locked --release --target "${TARGET}"
 
-      - name: Package
+      - name: Stage binary and archive
         env:
           TARGET: ${{ matrix.target }}
           ARCHIVE_FORMAT: ${{ matrix.archive }}
