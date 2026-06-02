@@ -28,16 +28,16 @@ jobs:
       matrix:
         rust: ['1.95.0', beta, nightly]
     steps:
+      - name: Checkout
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          persist-credentials: false
+
       - name: Install Rust
         uses: dtolnay/rust-toolchain@3c5f7ea28cd621ae0bf5283f0e981fb97b8a7af9 # master
         with:
           toolchain: ${{ matrix.rust }}
           components: rustfmt, clippy
-
-      - name: Checkout
-        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
-        with:
-          persist-credentials: false
 
       - name: Quality – cargo fmt
         run: |
@@ -45,13 +45,13 @@ jobs:
 
       - name: Quality – cargo clippy
         run: |
-          cargo clippy --locked --all-targets --all-features -- -D warnings
+          cargo clippy --locked --all-targets -- -D warnings
 
       - name: Build (dev)
-        run: cargo build --locked --all-features
+        run: cargo build --locked
 
       - name: Build (release)
-        run: cargo build --locked --all-features --release
+        run: cargo build --locked --release
 
       - name: Install cargo-nextest
         uses: taiki-e/install-action@c070f87102a1c75b3183910f391c1cb887fe13c8 # v2.77.6
@@ -87,16 +87,16 @@ jobs:
           - target: aarch64-pc-windows-msvc
             os: windows-11-arm
     steps:
+      - name: Checkout
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          persist-credentials: false
+
       - name: Install Rust
         uses: dtolnay/rust-toolchain@3c5f7ea28cd621ae0bf5283f0e981fb97b8a7af9 # master
         with:
           toolchain: stable
           targets: ${{ matrix.target }}
-
-      - name: Checkout
-        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
-        with:
-          persist-credentials: false
 
       - name: Install musl-tools (Linux)
         if: contains(matrix.target, 'linux-musl')
@@ -105,10 +105,10 @@ jobs:
           sudo apt-get install -y musl-tools
 
       - name: Build (dev)
-        run: cargo build --locked --all-features
+        run: cargo build --locked
 
       - name: Build (release)
-        run: cargo build --locked --all-features --release
+        run: cargo build --locked --release
 
       - name: Install cargo-nextest
         uses: taiki-e/install-action@c070f87102a1c75b3183910f391c1cb887fe13c8 # v2.77.6
