@@ -8,6 +8,15 @@ and this project adheres to
 
 ## [Unreleased]
 
+## [v0.1.7] - 2026-06-02
+
+### Changed
+
+- Align CI workflows with playbook v1.1 canonical conventions
+- Apply matrix job naming conventions
+- Bump dependencies (patch and minor updates)
+- Update README badges
+
 ## [v0.1.6] - 2026-05-14
 
 ### Changed
@@ -118,3 +127,13 @@ and this project adheres to
 - Problem word detection and automatic retry
 - Struggle combination tracking
 - Fastest/slowest word statistics
+
+[Unreleased]: https://github.com/graelo/dvoratt/compare/v0.1.7...HEAD
+[v0.1.7]: https://github.com/graelo/dvoratt/compare/v0.1.6...v0.1.7
+[v0.1.6]: https://github.com/graelo/dvoratt/compare/v0.1.5...v0.1.6
+[v0.1.5]: https://github.com/graelo/dvoratt/compare/v0.1.4...v0.1.5
+[v0.1.4]: https://github.com/graelo/dvoratt/compare/v0.1.3...v0.1.4
+[v0.1.3]: https://github.com/graelo/dvoratt/compare/v0.1.2...v0.1.3
+[v0.1.2]: https://github.com/graelo/dvoratt/compare/v0.1.1...v0.1.2
+[v0.1.1]: https://github.com/graelo/dvoratt/compare/v0.1.0...v0.1.1
+[v0.1.0]: https://github.com/graelo/dvoratt/releases/tag/v0.1.0
