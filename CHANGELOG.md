@@ -8,6 +8,24 @@ and this project adheres to
 
 ## [Unreleased]
 
+### Added
+
+- Add a `dvoratt(1)` user manual covering the TUI controls and session output.
+- Add a Makefile as the canonical local verification task runner.
+- Add repository guidance for coding agents in `AGENTS.md`.
+
+### Changed
+
+- Move the application implementation into a library target with a thin binary
+  launcher, enabling library and documentation tests.
+- Reduce crate-level rustdocs to a short README link instead of duplicating the
+  user documentation.
+- Update the README and CI test script for the Makefile and library target.
+
+### Removed
+
+- Remove the obsolete `DOCUMENTATION_UPDATE_SUMMARY.md` file.
+
 ## [v0.1.7] - 2026-06-02
 
 ### Changed
