@@ -1,0 +1,52 @@
+.TH DVORATT 1 "2026-08-20" "dvoratt 0.1.7" "User Commands"
+.SH NAME
+dvoratt \- Dvorak typing practice in the terminal
+.SH SYNOPSIS
+.B dvoratt
+.SH DESCRIPTION
+.B dvoratt
+is an interactive terminal application for practicing typing on the Dvorak
+keyboard layout. It presents words from progressively more difficult lessons,
+tracks typing performance, and repeats words that need more practice.
+.PP
+The application uses the alternate screen and raw terminal input. Press
+.B Ctrl-C
+to finish a session and display its statistics.
+.SH CONTROLS
+.TS
+ tab(;);
+ lb lb
+ l l.
+ Key;Action
+Any character;Type the current word
+Space;Submit the current word
+Backspace;Delete the last character
+Tab;Select the next word list
+Shift-Tab;Select the previous word list
+Ctrl-C;Exit and show session statistics
+.TE
+.SH WORD LISTS
+The application includes five embedded lesson levels. Use
+.B Tab
+or
+.B Shift-Tab
+to move between them. Difficult or mistyped words are added to the practice
+queue for repetition.
+.SH STATISTICS
+When a session ends, dvoratt reports average words per minute, accuracy, words
+typed, problem words, and the fastest and slowest words. It also reports
+struggle combinations identified during the session.
+.SH FILES
+.TP
+.I lessons/level1.txt.gz
+through
+.I lessons/level5.txt.gz
+Embedded lesson word lists when building from the source tree.
+.SH EXIT STATUS
+.TP
+.B 0
+The application exited normally.
+.SH SEE ALSO
+.BR dvoratt (1)
+.SH AUTHORS
+graelo <https://github.com/graelo/dvoratt>

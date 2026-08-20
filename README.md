@@ -82,29 +82,27 @@ configuration is currently required.
 
 ## Development
 
-### Running Tests
+The [`Makefile`](Makefile) is the canonical definition of local verification
+and `make help` lists all available tasks. Run `make check` before pushing and
+`make check-all` before opening a pull request.
 
-```bash
-cargo test
-```
+Useful targets include:
 
-### Code Quality Checks
+- `make check` — formatting, Clippy, and the full test suite
+- `make check-all` — adds dependency, commit, Markdown, manpage, and CI
+    security checks
+- `make fix` — automatically format and apply Clippy fixes
+- `make coverage` — generate an HTML coverage report
 
-```bash
-# Run clippy for linting
-cargo clippy --all-targets --all-features
-
-# Check for security vulnerabilities
-cargo deny check
-
-# Format code
-cargo fmt
-```
+The roff user manual is available at [`man/dvoratt.1`](man/dvoratt.1) and can
+be linted with `make man`.
 
 ## Architecture
 
-The application is structured into several modules:
+The application is structured as a library target with a thin binary launcher:
 
+- **`lib.rs`**: Application runner and library crate wiring
+- **`main.rs`**: Binary entry point
 - **`app.rs`**: Main application state and logic
 - **`ui.rs`**: Terminal user interface rendering
 - **`word_lists.rs`**: Word list definitions for different difficulty levels
