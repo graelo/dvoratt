@@ -16,6 +16,13 @@ and this project adheres to
 
 ### Changed
 
+- Align CI workflows with github-actions-playbook v1.9: switch from
+  `dtolnay/rust-toolchain` to the SHA-pinned
+  `actions-rust-lang/setup-rust-toolchain@v2.0.0` (with `cache: false` and the
+  singular `target` input), adopt the new self-repository
+  `$/.github/...` reusable-workflow syntax, drop the now-unneeded
+  `.github/zizmor.yml` superfluous-action suppressions, and update the poutine
+  skip list accordingly.
 - Move the application implementation into a library target with a thin binary
   launcher, enabling library and documentation tests.
 - Reduce crate-level rustdocs to a short README link instead of duplicating the
@@ -24,6 +31,7 @@ and this project adheres to
 
 ### Removed
 
+- Remove the `homepage` field from `Cargo.toml`, refused by Rust 1.101+.
 - Remove the obsolete `DOCUMENTATION_UPDATE_SUMMARY.md` file.
 
 ## [v0.1.7] - 2026-06-02
