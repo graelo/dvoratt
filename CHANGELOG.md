@@ -13,6 +13,8 @@ and this project adheres to
 - Add a `dvoratt(1)` user manual covering the TUI controls and session output.
 - Add a Makefile as the canonical local verification task runner.
 - Add repository guidance for coding agents in `AGENTS.md`.
+- Add a `.cargo/config.toml` that denies cargo warnings locally, mirroring the
+  CI's `CARGO_BUILD_WARNINGS` behavior.
 
 ### Changed
 
